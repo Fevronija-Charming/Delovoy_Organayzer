@@ -42,6 +42,7 @@ kolvo_privychek=0
 kontrol_dney=0
 id=1
 id_zametki=1
+
 id_privycki=1
 nov_id_privycki=1
 zapis=0
@@ -82,8 +83,8 @@ dp=Dispatcher()
 broker=RabbitBroker(url="amqp://guest:guest@localhost:5672/")
 @broker.subscriber("UROKI")
 async def get_uroki_fromFASTAPI(data: str):
-    await Bot.send_message(chat_id=7325873406, text='СООБЩЕНИЕ')
-    await Bot.send_message(chat_id=7325873406,text=data)
+    await Bot.send_message(chat_id=os.getenv('bot_id'), text='СООБЩЕНИЕ')
+    await Bot.send_message(chat_id=os.getenv('bot_id'),text=data)
 # Работа с заметками
 class PrivyckaSvodka(BaseMiddleware):
     def __init__(self, bot: Bot) -> None:
