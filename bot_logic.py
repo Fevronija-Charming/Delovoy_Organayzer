@@ -1750,17 +1750,17 @@ def kostyly_DB():
     # создание интерфейса для sql запроса
     cursor = connection.cursor()
     # здесь пиши SQL запрос для БД для вставки строк CREATE TABLE название (строки данные ограничения, первичный ключ)
-    query = '''CREATE table IF NOT EXIST Календарные (id BIGINT NOT NULL PRIMARY KEY, Название_События VARCHAR(128) NOT NULL, Вид_События VARCHAR(128) NOT NULL, Локация_События VARCHAR(128) NOT NULL, 
+    query = '''CREATE table Календарные (id BIGINT NOT NULL PRIMARY KEY, Название_События VARCHAR(128) NOT NULL, Вид_События VARCHAR(128) NOT NULL, Локация_События VARCHAR(128) NOT NULL, 
            Участник_События VARCHAR(128) NOT NULL, Начало_События VARCHAR(128) NOT NULL, Окончание_События VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL)''';
     '''CREATE table IF NOT EXIST Привычки (id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128) NOT NULL,
     Помогающий_Человек VARCHAR(128) NOT NULL, Триггер_Привычки VARCHAR(128) NOT NULL, Награда_Привычки VARCHAR(128) NOT NULL, Требование_Заказчика VARCHAR(128) NOT NULL,
     Требование_Исполнителя VARCHAR(128) NOT NULL, Целевое_Число_Повторений BIGINT NOT NULL, Выполненное_Число_Повторений BIGINT NOT NULL,
     Дата_регистрации_ритуала VARCHAR(128) NOT NULL, Дата_выполнения_ритуала VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
-    CREATE table IF NOT EXIST Заметки (id BIGINT NOT NULL PRIMARY KEY, Текст_заметки TEXT NOT NULL, Тема_1 VARCHAR(128) NOT NULL,  Тема_2 VARCHAR(128) NOT NULL, Тема_3 VARCHAR(128) NOT NULL,
+    CREATE table Заметки (id BIGINT NOT NULL PRIMARY KEY, Текст_заметки TEXT NOT NULL, Тема_1 VARCHAR(128) NOT NULL,  Тема_2 VARCHAR(128) NOT NULL, Тема_3 VARCHAR(128) NOT NULL,
     Тема_4 VARCHAR(128) NOT NULL, Тема_5 VARCHAR(128) NOT NULL, Дата_регистрации VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
-    CREATE table IF NOT EXIST Дела (id BIGINT NOT NULL PRIMARY KEY, Что_Cделать VARCHAR(128) NOT NULL, Одноразовое_Проект VARCHAR(128) NOT NULL, Помошник VARCHAR(128) NOT NULL, Группа_Задач VARCHAR(128) NOT NULL, Срок_Выполнения VARCHAR(128) NOT NULL,
+    CREATE table Дела (id BIGINT NOT NULL PRIMARY KEY, Что_Cделать VARCHAR(128) NOT NULL, Одноразовое_Проект VARCHAR(128) NOT NULL, Помошник VARCHAR(128) NOT NULL, Группа_Задач VARCHAR(128) NOT NULL, Срок_Выполнения VARCHAR(128) NOT NULL,
     Отметка_времени VARCHAR(128) NOT NULL, Синхронизация BIGINT NOT NULL);
-    CREATE table IF NOT EXIST Проект (id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL,
+    CREATE table Проект (id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL,
     Критерий_завершенности VARCHAR(128) NOT NULL, Завершённость_пректа INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL,
     Завершенность_Этап_1 INT NOT NULL, Этап_2 VARCHAR(128) NOT NULL, Завершенность_Этап_2 INT NOT NULL, Этап_3 VARCHAR(128) NOT NULL,
     авершенность_Этап_3 INT NOT NULL, Этап_4 VARCHAR(128) NOT NULL, Завершенность_Этап_4 INT NOT NULL, Этап_5 VARCHAR(128) NOT NULL,
