@@ -75,16 +75,16 @@ from aiogram.types import BotCommand
 import psycopg2 as ps
 from colorama import *
 # импорты фреймворка
-# импорты фреймворка
 # этр образ бота в программе
 Bot = Bot(TOKEN_API_KEY)
 # это обьект для обработки сообщений
 dp=Dispatcher()
-broker=RabbitBroker(url="amqp://guest:guest@localhost:5672/")
-@broker.subscriber("UROKI")
-async def get_uroki_fromFASTAPI(data: str):
-    await Bot.send_message(chat_id=os.getenv('bot_id'), text='СООБЩЕНИЕ')
-    await Bot.send_message(chat_id=os.getenv('bot_id'),text=data)
+# убрать зайца
+#broker=RabbitBroker(url="amqp://guest:guest@localhost:5672/")
+#@broker.subscriber("UROKI")
+#async def get_uroki_fromFASTAPI(data: str):
+#await Bot.send_message(chat_id=os.getenv('bot_id'), text='СООБЩЕНИЕ')
+#await Bot.send_message(chat_id=os.getenv('bot_id'),text=data)
 # Работа с заметками
 class PrivyckaSvodka(BaseMiddleware):
     def __init__(self, bot: Bot) -> None:
@@ -1740,11 +1740,12 @@ klava_start=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="архив сделанных проектов"),KeyboardButton(text="выход")]],
     resize_keyboard=True,input_field_placeholder="Начальная буква названия")
 async def main():
-    async with broker:
-        await broker.start()
-        init(autoreset=True)
-        await Bot.set_my_commands(commands=private, scope=types.BotCommandScopeAllPrivateChats())
-        await Bot.delete_webhook(drop_pending_updates=True)
-        await dp.start_polling(Bot)
+#заяц выкл
+#async with broker:
+#await broker.start()
+    init(autoreset=True)
+    await Bot.set_my_commands(commands=private, scope=types.BotCommandScopeAllPrivateChats())
+    await Bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(Bot)
 if __name__ == "__main__":
     asyncio.run(main())
