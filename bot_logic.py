@@ -1,17 +1,18 @@
 # импорты для конфигурации движка приложения
 import asyncio
-import os
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union
 from datetime import datetime
 import time
 import calendar
 from aiogram.fsm.context import FSMContext
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
+import os
+load_dotenv(find_dotenv())
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, Message
-TOKEN_API_KEY="8534112288:AAHqdvo6sajUmuciYS7gpKbUhNBocXK5RqU"
+TOKEN_API_KEY= os.getenv("TOKEN_API_KEY")
+bot_id=os.getenv("bot_id")
+moi_id=os.getenv("moi_id")
 from faststream.rabbit import RabbitBroker
-bot_id=8534112288
-moi_id=7325873406
 projekt=[0,0,0,0,0,0,0,0,0,0,0,0]
 projekt[0]="закрепить доску на колёсики"
 projekt[1]="доска сводобно ездит на колёсиках по комнтате"
