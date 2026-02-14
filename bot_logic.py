@@ -1739,10 +1739,47 @@ klava_start=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="/stop"),KeyboardButton(text="/description")],
     [KeyboardButton(text="архив сделанных проектов"),KeyboardButton(text="выход")]],
     resize_keyboard=True,input_field_placeholder="Начальная буква названия")
+def kostyly_DB():
+    # создать таблицу
+    print(
+        '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Надо создать таблицу')
+    # создание подключения
+    import psycopg2 as ps
+    connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("dbnameold"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
+    # создание интерфейса для sql запроса
+    cursor = connection.cursor()
+    # здесь пиши SQL запрос для БД для вставки строк CREATE TABLE название (строки данные ограничения, первичный ключ)
+    query = '''CREATE table IF NOT EXIST Календарные (id BIGINT NOT NULL PRIMARY KEY, Название_События VARCHAR(128) NOT NULL, Вид_События VARCHAR(128) NOT NULL, Локация_События VARCHAR(128) NOT NULL, 
+           Участник_События VARCHAR(128) NOT NULL, Начало_События VARCHAR(128) NOT NULL, Окончание_События VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL)''';
+    '''CREATE table IF NOT EXIST Привычки (id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128) NOT NULL,
+    Помогающий_Человек VARCHAR(128) NOT NULL, Триггер_Привычки VARCHAR(128) NOT NULL, Награда_Привычки VARCHAR(128) NOT NULL, Требование_Заказчика VARCHAR(128) NOT NULL,
+    Требование_Исполнителя VARCHAR(128) NOT NULL, Целевое_Число_Повторений BIGINT NOT NULL, Выполненное_Число_Повторений BIGINT NOT NULL,
+    Дата_регистрации_ритуала VARCHAR(128) NOT NULL, Дата_выполнения_ритуала VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
+    CREATE table IF NOT EXIST Заметки (id BIGINT NOT NULL PRIMARY KEY, Текст_заметки TEXT NOT NULL, Тема_1 VARCHAR(128) NOT NULL,  Тема_2 VARCHAR(128) NOT NULL, Тема_3 VARCHAR(128) NOT NULL,
+    Тема_4 VARCHAR(128) NOT NULL, Тема_5 VARCHAR(128) NOT NULL, Дата_регистрации VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
+    CREATE table IF NOT EXIST Дела (id BIGINT NOT NULL PRIMARY KEY, Что_Cделать VARCHAR(128) NOT NULL, Одноразовое_Проект VARCHAR(128) NOT NULL, Помошник VARCHAR(128) NOT NULL, Группа_Задач VARCHAR(128) NOT NULL, Срок_Выполнения VARCHAR(128) NOT NULL,
+    Отметка_времени VARCHAR(128) NOT NULL, Синхронизация BIGINT NOT NULL);
+    CREATE table IF NOT EXIST Проект (id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL,
+    Критерий_завершенности VARCHAR(128) NOT NULL, Завершённость_пректа INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL,
+    Завершенность_Этап_1 INT NOT NULL, Этап_2 VARCHAR(128) NOT NULL, Завершенность_Этап_2 INT NOT NULL, Этап_3 VARCHAR(128) NOT NULL,
+    авершенность_Этап_3 INT NOT NULL, Этап_4 VARCHAR(128) NOT NULL, Завершенность_Этап_4 INT NOT NULL, Этап_5 VARCHAR(128) NOT NULL,
+    Завершенность_Этап_5 INT NOT NULL, Этап_6 VARCHAR(128) NOT NULL, Завершенность_Этап_6 INT NOT NULL, Этап_7 VARCHAR(128) NOT NULL,
+    Завершенность_Этап_7 INT NOT NULL, Этап_8 VARCHAR(128) NOT NULL, Завершенность_Этап_8 INT NOT NULL, Этап_9 VARCHAR(128) NOT NULL,
+    Завершенность_Этап_9 INT NOT NULL, Этап_10 VARCHAR(128) NOT NULL,Завершенность_Этап_10 INT NOT NULL, Дата_регистрации VARCHAR(128) NOT NULL, Дата_изменения VARCHAR(128) NOT NULL)'''
+    # подать запрос системе управления БД
+    cursor.execute(query)
+    # синхронизация изменений, комит версии
+    connection.commit()
+    # закрытие соединенмя с ДБ для безопасности
+    cursor.close()
+    connection.close()
+    print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Таблица создана, моя Госпожа!!!')
 async def main():
 #заяц выкл
 #async with broker:
 #await broker.start()
+    kostyly_DB()
     init(autoreset=True)
     await Bot.set_my_commands(commands=private, scope=types.BotCommandScopeAllPrivateChats())
     await Bot.delete_webhook(drop_pending_updates=True)
