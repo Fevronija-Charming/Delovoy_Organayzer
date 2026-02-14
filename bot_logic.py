@@ -1746,7 +1746,7 @@ def kostyly_DB():
     print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Надо создать таблицу')
     # создание подключения
     import psycopg2 as ps
-    connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("dbnameold"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
+    connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
     # создание интерфейса для sql запроса
     cursor = connection.cursor()
     # здесь пиши SQL запрос для БД для вставки строк CREATE TABLE название (строки данные ограничения, первичный ключ)
