@@ -105,6 +105,9 @@ class Уроки(Base):
     Что_Делали_На_Уроке: Mapped[str] = mapped_column(Text, nullable=False)
     Задание_На_Дом: Mapped[str] = mapped_column(String(128), nullable=False)
     Примечание: Mapped[str] = mapped_column(Text, nullable=False)
+#class Привычки(Base):
+    #__tablename__ = "Привычки"
+    #id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
 # импорты фреймворка
 from aiogram import Bot, Dispatcher, types, F, BaseMiddleware
 from aiogram.filters import CommandStart, Command, or_f
@@ -1790,8 +1793,8 @@ def kostyly_DB():
     cursor = connection.cursor()
     # здесь пиши SQL запрос для БД для вставки строк CREATE TABLE название (строки данные ограничения, первичный ключ)
     query = '''CREATE table Календарные (id BIGINT NOT NULL PRIMARY KEY, Название_События VARCHAR(128) NOT NULL, Вид_События VARCHAR(128) NOT NULL, Локация_События VARCHAR(128) NOT NULL, 
-           Участник_События VARCHAR(128) NOT NULL, Начало_События VARCHAR(128) NOT NULL, Окончание_События VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL)''';
-    '''CREATE table IF NOT EXIST Привычки (id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128) NOT NULL,
+           Участник_События VARCHAR(128) NOT NULL, Начало_События VARCHAR(128) NOT NULL, Окончание_События VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
+    CREATE table IF NOT EXIST Привычки (id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128) NOT NULL,
     Помогающий_Человек VARCHAR(128) NOT NULL, Триггер_Привычки VARCHAR(128) NOT NULL, Награда_Привычки VARCHAR(128) NOT NULL, Требование_Заказчика VARCHAR(128) NOT NULL,
     Требование_Исполнителя VARCHAR(128) NOT NULL, Целевое_Число_Повторений BIGINT NOT NULL, Выполненное_Число_Повторений BIGINT NOT NULL,
     Дата_регистрации_ритуала VARCHAR(128) NOT NULL, Дата_выполнения_ритуала VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
@@ -1822,7 +1825,7 @@ async def main():
 #async with broker:
 #await broker.start()
 # CRUD костыль на создание таблиц
-#kostyly_DB()
+    kostyly_DB()
 # ORM на таблицу по ученикам
     await create_tably()
     init(autoreset=True)
