@@ -1794,7 +1794,7 @@ def kostyly_DB():
     # здесь пиши SQL запрос для БД для вставки строк CREATE TABLE название (строки данные ограничения, первичный ключ)
     query = '''CREATE table Календарные (id BIGINT NOT NULL PRIMARY KEY, Название_События VARCHAR(128) NOT NULL, Вид_События VARCHAR(128) NOT NULL, Локация_События VARCHAR(128) NOT NULL, 
            Участник_События VARCHAR(128) NOT NULL, Начало_События VARCHAR(128) NOT NULL, Окончание_События VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
-    CREATE table IF NOT EXIST Привычки (id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128) NOT NULL,
+    CREATE table Привычки (id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128) NOT NULL,
     Помогающий_Человек VARCHAR(128) NOT NULL, Триггер_Привычки VARCHAR(128) NOT NULL, Награда_Привычки VARCHAR(128) NOT NULL, Требование_Заказчика VARCHAR(128) NOT NULL,
     Требование_Исполнителя VARCHAR(128) NOT NULL, Целевое_Число_Повторений BIGINT NOT NULL, Выполненное_Число_Повторений BIGINT NOT NULL,
     Дата_регистрации_ритуала VARCHAR(128) NOT NULL, Дата_выполнения_ритуала VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
