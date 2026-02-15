@@ -42,7 +42,6 @@ kolvo_privychek=0
 kontrol_dney=0
 id=1
 id_zametki=1
-
 id_privycki=1
 nov_id_privycki=1
 zapis=0
@@ -65,6 +64,47 @@ privycka=[]
 zapis_privycki=0
 svodka_privychek=[]
 kontrol_dney=1
+#работа с базой данных
+from sqlalchemy import  DateTime, String, Float, Column, Integer, func, Text, select
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+engine = create_async_engine(os.getenv("DBURL"),echo=True,max_overflow=5,pool_size=5)
+session_factory = async_sessionmaker(bind=engine,class_=AsyncSession,expire_on_commit=False)
+class Base(DeclarativeBase):
+    pass
+#class Ученики(Base):
+#__tablename__="Ученики"
+#id: Mapped[int]=mapped_column(primary_key=True, autoincrement=True, nullable=False)
+#Фамилия: Mapped[str]=mapped_column(String(128), nullable=False)
+#Имя: Mapped[str]=mapped_column(String(128), nullable=False)
+#class Предметы(Base):
+#__tablename__="Предметы"
+#id: Mapped[int]=mapped_column(primary_key=True, autoincrement=True, nullable=False)
+#Название_Предмета: Mapped[str]=mapped_column(String(32), nullable=False)
+#class Даты(Base):
+# __tablename__="Даты"
+#id: Mapped[int]=mapped_column(primary_key=True, autoincrement=True, nullable=False)
+#Дата: Mapped[str]=mapped_column(String(128), nullable=False)
+#class Ступени_Обучения(Base):
+#__tablename__ = "Ступени_Обучения"
+#id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+#Ступень_Обучения: Mapped[str] = mapped_column(String(128), nullable=False)
+class Уроки(Base):
+    __tablename__ = "Уроки"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Имя_Преподавателя: Mapped[str] = mapped_column(String(128), nullable=False)
+    Фамилия_Преподавателя: Mapped[str] = mapped_column(String(128), nullable=False)
+    Предмет_Обучения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Имя_Ученика: Mapped[str] = mapped_column(String(128), nullable=False)
+    Фамилия_Ученика: Mapped[str] = mapped_column(String(128), nullable=False)
+    Ступень_Обучения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Дата_Проведения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Время_Начала: Mapped[str] = mapped_column(String(128), nullable=False)
+    Длительность_Занятия_Мин: Mapped[int]
+    Стоимость_Занятия_Центов: Mapped[int]
+    Что_Делали_На_Уроке: Mapped[str] = mapped_column(Text, nullable=False)
+    Задание_На_Дом: Mapped[str] = mapped_column(String(128), nullable=False)
+    Примечание: Mapped[str] = mapped_column(Text, nullable=False)
 # импорты фреймворка
 from aiogram import Bot, Dispatcher, types, F, BaseMiddleware
 from aiogram.filters import CommandStart, Command, or_f
@@ -103,7 +143,7 @@ class PrivyckaSvodka(BaseMiddleware):
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с привычками")
             # создание интерфейса для sql запроса
             import psycopg2 as ps
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             # создание интерфейса для sql запроса
             cursor = connection.cursor()
             zapros = "SELECT * FROM Привычки;"
@@ -150,7 +190,7 @@ class DelaSvodka(BaseMiddleware):
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с разовыми делами")
             # создание интерфейса для sql запроса
             import psycopg2 as ps
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             # создание интерфейса для sql запроса
             cursor = connection.cursor()
             zapros = "SELECT * FROM Дела;"
@@ -193,7 +233,7 @@ class ZametkiSvodka(BaseMiddleware):
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с заметками")
             # создание интерфейса для sql запроса
             import psycopg2 as ps
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             # создание интерфейса для sql запроса
             cursor = connection.cursor()
             zapros = "SELECT * FROM Заметки;"
@@ -235,7 +275,7 @@ class ProjektySvodka(BaseMiddleware):
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с проектами")
             # создание интерфейса для sql запроса
             import psycopg2 as ps
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             # создание интерфейса для sql запроса
             cursor = connection.cursor()
             zapros = "SELECT * from Проект;"
@@ -513,7 +553,7 @@ async def registracija_projekta(message: types.Message):
         # импорт библиотеки для pq админ
         import psycopg2 as ps
         # создание подключения
-        connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+        connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
         query = '''INSERT INTO Проект (id, Название_проекта, Критерий_завершенности, Завершённость_пректа, Этап_1, Завершенность_Этап_1, Этап_2, Завершенность_Этап_2, Этап_3,
@@ -612,7 +652,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[9] == 1 and pokazatel_uspecha == prodvizenije[10]:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершённость_пректа=1 WHERE id=%s'''
@@ -628,7 +668,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
         elif pokazatel_uspecha == prodvizenije[(etap_poisk)-1] and etap_poisk == 1:
             await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
             import psycopg2 as ps
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             # создание интерфейса для sql запроса
             cursor = connection.cursor()
             edit = '''UPDATE Проект SET Завершенность_Этап_1=1 WHERE id=%s'''
@@ -643,7 +683,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk)-1-1]==1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_2=1 WHERE id=%s'''
@@ -658,7 +698,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk)-1-1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres",password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_3=1 WHERE id=%s'''
@@ -673,7 +713,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres",password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_4=1 WHERE id=%s'''
@@ -688,7 +728,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_5=1 WHERE id=%s'''
@@ -703,7 +743,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres",password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_6=1 WHERE id=%s'''
@@ -718,7 +758,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_7=1 WHERE id=%s'''
@@ -733,7 +773,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_8=1 WHERE id=%s'''
@@ -748,7 +788,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_9=1 WHERE id=%s'''
@@ -763,7 +803,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
                 import psycopg2 as ps
-                connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+                connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
                 edit = '''UPDATE Проект SET Завершенность_Этап_10=1 WHERE id=%s'''
@@ -888,7 +928,7 @@ async def registracija_projekta(message: types.Message):
         # импорт библиотеки для pq админ
         import psycopg2 as ps
         # создание подключения
-        connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+        connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
         query = '''INSERT INTO Заметки (id, Текст_заметки, Тема_1,  Тема_2, Тема_3, 
@@ -973,7 +1013,7 @@ async def polycajem_temu_sbornika(message: types.Message, state: FSMContext):
     await message.answer(text="Собираю заметки по данному запросу")
     sbornik=[]
     import psycopg2 as ps
-    connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+    connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
     # создание интерфейса для sql запроса
     cursor = connection.cursor()
     query = "SELECT * FROM Заметки WHERE Тема_1 = %s OR Тема_2 = %s OR Тема_3 = %s OR Тема_4 = %s OR Тема_5 = %s ORDER BY ID DESC;"
@@ -1097,7 +1137,7 @@ async def registjacija_dela(message: types.Message):
         await message.answer(text=f"{delovoy_kartez}")
         await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
         import psycopg2 as ps
-        connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+        connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
         insert = '''INSERT INTO Дела (id, Что_Cделать, Одноразовое_Проект, Помошник, Группа_Задач, Срок_Выполнения, Отметка_времени, Синхронизация)
@@ -1264,7 +1304,7 @@ async def registracija_privycki(message: types.Message):
         privycka_kartez=tuple(privycka_long)
         await message.answer(text="Выполняется запись в БД")
         import psycopg2 as ps
-        connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+        connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
         insert = '''INSERT INTO Привычки (id, Требуемый_Навык, Главное_Препятствие, Помогающий_Человек, Триггер_Привычки, 
@@ -1366,7 +1406,7 @@ async def artukul_navyka(message: types.Message, state: FSMContext):
             await message.answer(text="Делаю отметку об выполненном ритуале в базе данных")
             # берем предыдущее количество ритуалов
             import psycopg2 as ps
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             cursor = connection.cursor()
             edit = ''' SELECT * FROM Привычки WHERE id=%s'''
             cursor.execute(edit, (artikul_fakt,))
@@ -1384,7 +1424,7 @@ async def artukul_navyka(message: types.Message, state: FSMContext):
             tochnoje_vremja= str(datetime.now())
             vremja_zapolnenija = tochnoje_vremja[:-10]
             otmetka_vremeni = int(time.time())
-            connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
             cursor = connection.cursor()
             edit = ''' UPDATE Привычки SET   Выполненное_Число_Повторений=%s, Дата_выполнения_ритуала=%s, Отметка_Времени=%s WHERE id=%s'''
             cursor.execute(edit, (kolicestvo_ritualov, vremja_zapolnenija, otmetka_vremeni,artikul_fakt))
@@ -1653,8 +1693,7 @@ async def kalendarnoje_сheck(message: types.Message):
                 validacija_kalendarnoje = 1
     if kontrol_dney == 1 and validacija_kalendarnoje == 1:
         await message.answer(text="Данные проверены и готовы к записи",reply_markup=klava_kalendarnyh)
-@dp.message((F.text.lower()=="регистрация календ"
-                             "арного дела"))
+@dp.message((F.text.lower()=="регистрация календарного дела"))
 @dp.message((F.text.lower()=="/timetable_register"))
 async def registacija_kalendarnogo(message: types.Message):
     await message.answer(text="запись календарного дела в БД",reply_markup=ReplyKeyboardRemove())
@@ -1679,7 +1718,7 @@ async def registacija_kalendarnogo(message: types.Message):
         # импорт библиотеки для pq админ
         import psycopg2 as ps
         # создание подключения
-        connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+        connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
         query = '''INSERT INTO Календарные (id, Название_События, Вид_События, Локация_События, Участник_События, Начало_События, Окончание_События, Отметка_Времени)
@@ -1775,11 +1814,17 @@ def kostyly_DB():
     cursor.close()
     connection.close()
     print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Таблица создана, моя Госпожа!!!')
+async def create_tably():
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
 async def main():
 #заяц выкл
 #async with broker:
 #await broker.start()
-    kostyly_DB()
+# CRUD костыль на создание таблиц
+#kostyly_DB()
+# ORM на таблицу по ученикам
+    await create_tably()
     init(autoreset=True)
     await Bot.set_my_commands(commands=private, scope=types.BotCommandScopeAllPrivateChats())
     await Bot.delete_webhook(drop_pending_updates=True)
