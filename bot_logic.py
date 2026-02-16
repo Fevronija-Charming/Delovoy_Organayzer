@@ -1277,7 +1277,7 @@ async def registjacija_dela(message: types.Message):
         cursor = connection.cursor()
         insert = '''INSERT INTO Дела (id, Что_Cделать, Одноразовое_Проект, Помошник, Группа_Задач, Срок_Выполнения, Отметка_времени, Синхронизация)
              VALUES(%s,%s,%s,%s,%s,%s,%s,%s)'''
-        cursor.execute(insert, delovoy_kartez)
+        cursor.execute(insert, (delovoy_kartez,))
         # синхронизация изменений, комит версии
         connection.commit()
         # закрытие соединенмя с ДБ для безопасности
