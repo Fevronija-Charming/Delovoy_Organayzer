@@ -658,7 +658,7 @@ async def registracija_projekta(message: types.Message):
         cursor = connection.cursor()
         query = '''INSERT INTO Проект (id, Название_проекта, Критерий_завершенности, Завершённость_пректа, Этап_1, Завершенность_Этап_1, Этап_2, Завершенность_Этап_2, Этап_3,
         Завершенность_Этап_3, Этап_4, Завершенность_Этап_4, Этап_5, Завершенность_Этап_5, Этап_6, Завершенность_Этап_6, Этап_7, Завершенность_Этап_7, Этап_8, Завершенность_Этап_8,
-        Этап_9, Завершенность_Этап_9, Этап_10, Завершенность_Этап_10, Дата_регистрации, Дата_изменения, срок) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+        Этап_9, Завершенность_Этап_9, Этап_10, Завершенность_Этап_10, Дата_регистрации, Дата_изменения) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
         # подать запрос системе управления БД
         cursor.execute(query, projekt_kartez)
         # синхронизация изменений, комит версии
@@ -1935,7 +1935,7 @@ def kostyly_DB():
     CREATE table Дела (id BIGINT NOT NULL PRIMARY KEY, Что_Cделать VARCHAR(128) NOT NULL, Одноразовое_Проект VARCHAR(128) NOT NULL, Помошник VARCHAR(128) NOT NULL, Группа_Задач VARCHAR(128) NOT NULL, Срок_Выполнения VARCHAR(128) NOT NULL,
     Отметка_времени VARCHAR(128) NOT NULL, Синхронизация BIGINT NOT NULL);
     CREATE table Проект (id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL,
-    Критерий_завершенности VARCHAR(128) NOT NULL, Завершённость_пректа INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL,
+    Критерий_завершенности VARCHAR(128) NOT NULL, Завершённость_пр4екта INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL,
     Завершенность_Этап_1 INT NOT NULL, Этап_2 VARCHAR(128) NOT NULL, Завершенность_Этап_2 INT NOT NULL, Этап_3 VARCHAR(128) NOT NULL,
     авершенность_Этап_3 INT NOT NULL, Этап_4 VARCHAR(128) NOT NULL, Завершенность_Этап_4 INT NOT NULL, Этап_5 VARCHAR(128) NOT NULL,
     Завершенность_Этап_5 INT NOT NULL, Этап_6 VARCHAR(128) NOT NULL, Завершенность_Этап_6 INT NOT NULL, Этап_7 VARCHAR(128) NOT NULL,
