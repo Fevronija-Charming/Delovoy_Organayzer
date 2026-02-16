@@ -160,7 +160,7 @@ class Проект(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
     Название_проекта: Mapped[str] = mapped_column(String(128), nullable=False)
     Критерий_завершенности: Mapped[str] = mapped_column(String(128), nullable=False)
-    Завершённость_пректа: Mapped[int]  = mapped_column(nullable=False)
+    Завершённость_проекта: Mapped[int]  = mapped_column(nullable=False)
     Этап_1: Mapped[str] = mapped_column(String(128), nullable=False)
     Завершенность_Этап_1: Mapped[int]  = mapped_column(nullable=False)
     Этап_2: Mapped[str] = mapped_column(String(128), nullable=False)
