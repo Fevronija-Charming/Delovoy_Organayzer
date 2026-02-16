@@ -105,9 +105,101 @@ class Уроки(Base):
     Что_Делали_На_Уроке: Mapped[str] = mapped_column(Text, nullable=False)
     Задание_На_Дом: Mapped[str] = mapped_column(String(128), nullable=False)
     Примечание: Mapped[str] = mapped_column(Text, nullable=False)
-#class Привычки(Base):
-    #__tablename__ = "Привычки"
-    #id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+class Календарные(Base):
+    __tablename__ = "Календарные"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Название_События: Mapped[str] = mapped_column(String(128), nullable=False)
+    Вид_События: Mapped[str] = mapped_column(String(128), nullable=False)
+    Локация_События: Mapped[str]  = mapped_column(String(128), nullable=False)
+    Участник_События: Mapped[str]  = mapped_column(String(128), nullable=False)
+    Начало_События: Mapped[str]  = mapped_column(String(128), nullable=False)
+    Окончание_События: Mapped[str]  = mapped_column(String(128), nullable=False)
+    Отметка_Времени: Mapped[int]  = mapped_column(nullable=False)
+#CREATE table Календарные (id BIGINT NOT NULL PRIMARY KEY, Название_События VARCHAR(128) NOT NULL, Вид_События VARCHAR(128) NOT NULL, Локация_События VARCHAR(128) NOT NULL,
+#Участник_События VARCHAR(128) NOT NULL, Начало_События VARCHAR(128) NOT NULL, Окончание_События VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL);
+class Привычки(Base):
+    __tablename__ = "Привычки"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Требуемый_Навык: Mapped[str] = mapped_column(String(128), nullable=False)
+    Главное_Препятствие: Mapped[str] = mapped_column(String(128), nullable=False)
+    Помогающий_Человек: Mapped[str] = mapped_column(String(128), nullable=False)
+    Триггер_Привычки: Mapped[str] = mapped_column(String(128), nullable=False)
+    Награда_Привычки: Mapped[str] = mapped_column(String(128), nullable=False)
+    Требование_Заказчика: Mapped[str] = mapped_column(String(128), nullable=False)
+    Требование_Исполнителя: Mapped[str] = mapped_column(String(128), nullable=False)
+    Целевое_Число_Повторений: Mapped[int]  = mapped_column(nullable=False)
+    Выполненное_Число_Повторений: Mapped[int]  = mapped_column(nullable=False)
+    Дата_Регистрации_Ритуала: Mapped[str] = mapped_column(String(128), nullable=False)
+    Дата_Выполнения_Ритуала: Mapped[str] = mapped_column(String(128), nullable=False)
+    Отметка_Времени: Mapped[int]  = mapped_column(nullable=False)
+#CREATE table Привычки(id BIGINT NOT NULL PRIMARY KEY, Требуемый_Навык VARCHAR(128), Главное_Препятствие VARCHAR(128)
+# NOT NULL, Помогающий_Человек VARCHAR(128) NOT NULL, Триггер_Привычки VARCHAR(128) NOT ULL, Награда_Привычки VARCHAR(128)
+#NOT NULL, Требование_Заказчика VARCHAR(128) NOT NULL, Требование_Исполнителя VARCHAR(128) NOT NULL, Целевое_Число_Повторений
+#BIGINT NOT NULL, Выполненное_Число_Повторений BIGINT NOT NULL, Дата_регистрации_ритуала VARCHAR(128) NOT NULL,
+#Дата_выполнения_ритуала VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL)
+class Заметки(Base):
+    __tablename__ = "Заметки"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Текст_заметки: Mapped[str] = mapped_column(Text, nullable=False)
+    Тема_1: Mapped[str] = mapped_column(String(128), nullable=False)
+    Тема_2: Mapped[str] = mapped_column(String(128), nullable=False)
+    Тема_3: Mapped[str] = mapped_column(String(128), nullable=False)
+    Тема_4: Mapped[str] = mapped_column(String(128), nullable=False)
+    Тема_5: Mapped[str] = mapped_column(String(128), nullable=False)
+    Дата_регистрации: Mapped[str] = mapped_column(String(128), nullable=False)
+    Отметка_Времени: Mapped[int]  = mapped_column(nullable=False)
+#CREATE table Заметки(id BIGINT NOT NULL PRIMARY KEY, Текст_заметки TEXT NOT NULL, Тема_1 VARCHAR(128) NOT NULL, Тема_2
+#VARCHAR(128) NOT NULL, Тема_3 VARCHAR(128) NOT NULL, Тема_4 VARCHAR(128) NOT NULL, Тема_5 VARCHAR(128) NOT NULL,
+#Дата_регистрации VARCHAR(128) NOT NULL, Отметка_Времени BIGINT NOT NULL)
+class Проект(Base):
+    __tablename__ = "Проект"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Название_проекта: Mapped[str] = mapped_column(String(128), nullable=False)
+    Критерий_завершенности: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершённость_пректа: Mapped[int]  = mapped_column(nullable=False)
+    Этап_1: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_1: Mapped[int]  = mapped_column(nullable=False)
+    Этап_2: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_2: Mapped[int]  = mapped_column(nullable=False)
+    Этап_3: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_3: Mapped[int]  = mapped_column(nullable=False)
+    Этап_4: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_4: Mapped[int]  = mapped_column(nullable=False)
+    Этап_5: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_5: Mapped[int]  = mapped_column(nullable=False)
+    Этап_6: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_6: Mapped[int]  = mapped_column(nullable=False)
+    Этап_7: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_7: Mapped[int]  = mapped_column(nullable=False)
+    Этап_8: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_8: Mapped[int]  = mapped_column(nullable=False)
+    Этап_9: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_9: Mapped[int]  = mapped_column(nullable=False)
+    Этап_10: Mapped[str] = mapped_column(String(128), nullable=False)
+    Завершенность_Этап_10: Mapped[int]  = mapped_column(nullable=False)
+    Дата_регистрации: Mapped[str] = mapped_column(String(128), nullable=False)
+    Дата_изменения: Mapped[str] = mapped_column(String(128), nullable=False)
+#CREATE table Проект(id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL, Критерий_завершенности VARCHAR(128) NOT NULL,
+#Завершённость_пректа INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL, Завершенность_Этап_1 INT NOT NULL, Этап_2 VARCHAR(128)
+#NOT NULL, Завершенность_Этап_2 INT NOT NULL, Этап_3 VARCHAR(128) NOT NULL, Завершенность_Этап_3 INT NOT NULL, Этап_4
+#VARCHAR(128) NOT NULL, Завершенность_Этап_4 INT NOT NULL, Этап_5 VARCHAR(128) NOT NULL, Завершенность_Этап_5 INT NOT NULL,
+#Этап_6 VARCHAR(128) NOT NULL, Завершенность_Этап_6 INT NOT NULL, Этап_7 VARCHAR(128) NOT NULL, Завершенность_Этап_7
+#INT NOT NULL, Этап_8 VARCHAR(128) NOT NULL, Завершенность_Этап_8 INT NOT NULL, Этап_9 VARCHAR(128) NOT NULL,
+#Завершенность_Этап_9 INT NOT NULL, Этап_10 VARCHAR(128) NOT NULL, Завершенность_Этап_10 INT NOT NULL, Дата_регистрации
+#VARCHAR(128) NOT NULL, Дата_изменения VARCHAR(128) NOT NULL)'''
+class Дела(Base):
+    __tablename__ = "Дела"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Что_Cделать: Mapped[str] = mapped_column(String(128), nullable=False)
+    Одноразовое_Проект: Mapped[str] = mapped_column(String(32), nullable=False)
+    Помошник: Mapped[str] = mapped_column(String(32), nullable=False)
+    Группа_Задач: Mapped[str] = mapped_column(String(32), nullable=False)
+    Срок_Выполнения: Mapped[str] = mapped_column(String(32), nullable=False)
+    Отметка_времени : Mapped[str] = mapped_column(String(32), nullable=False)
+    Синхронизация: Mapped[int]  = mapped_column(nullable=False)
+#CREATE table Дела (id BIGINT NOT NULL PRIMARY KEY, Что_Cделать VARCHAR(128) NOT NULL, Одноразовое_Проект VARCHAR(128) NOT NULL,
+#Помошник VARCHAR(128) NOT NULL, Группа_Задач VARCHAR(128) NOT NULL, Срок_Выполнения VARCHAR(128) NOT NULL,
+#Отметка_времени VARCHAR(128) NOT NULL, Синхронизация BIGINT NOT NULL)
 # импорты фреймворка
 from aiogram import Bot, Dispatcher, types, F, BaseMiddleware
 from aiogram.filters import CommandStart, Command, or_f
@@ -1825,7 +1917,7 @@ async def main():
 #async with broker:
 #await broker.start()
 # CRUD костыль на создание таблиц
-    kostyly_DB()
+    #kostyly_DB()
 # ORM на таблицу по ученикам
     await create_tably()
     init(autoreset=True)
