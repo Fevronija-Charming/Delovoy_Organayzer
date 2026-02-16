@@ -183,7 +183,7 @@ class Проект(Base):
     Завершенность_Этап_10: Mapped[int]  = mapped_column(nullable=False)
     Дата_регистрации: Mapped[str] = mapped_column(String(128), nullable=False)
     Дата_изменения: Mapped[str] = mapped_column(String(128), nullable=False)
-    Сихнронизация: Mapped[int] = mapped_column(nullable=False)
+    Синхронизация: Mapped[int] = mapped_column(nullable=False)
 #CREATE table Проект(id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL, Критерий_завершенности VARCHAR(128) NOT NULL,
 #Завершённость_пректа INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL, Завершенность_Этап_1 INT NOT NULL, Этап_2 VARCHAR(128)
 #NOT NULL, Завершенность_Этап_2 INT NOT NULL, Этап_3 VARCHAR(128) NOT NULL, Завершенность_Этап_3 INT NOT NULL, Этап_4
