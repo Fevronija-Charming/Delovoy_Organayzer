@@ -64,6 +64,8 @@ privycka=[]
 zapis_privycki=0
 svodka_privychek=[]
 kontrol_dney=1
+proverka_1=0
+proverka_2=0
 #работа с базой данных
 from sqlalchemy import  DateTime, String, Float, Column, Integer, func, Text, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -623,14 +625,15 @@ async def proverka_buf(message: types.Message):
 async def registracija_projekta(message: types.Message):
     await message.answer(text="Проверка условий записи")
     global zapis
+    global projekt
+    global projekt_long
+    global id_projekta
+    global validacija_projekta
     if zapis == 0:
         await message.answer(text="Данные в буфере по проекту отстутствуют, заполните буфер")
     if validacija_projekta == 0:
         await message.answer(text="Данные в буфере не прошли проверку, проверьте данные")
     if validacija_projekta == 1 and zapis == 1:
-        global projekt
-        global projekt_long
-        global id_projekta
         projekt_long.append(id_projekta)
         for i in range(26):
             soobshenie=0
@@ -663,6 +666,11 @@ async def registracija_projekta(message: types.Message):
         connection.close()
         print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Вставка выполнена, моя Госпожа!')
         await message.answer(text="Регистрация проекта в БД выполнена")
+        projekt.clear()
+        projekt_long.clear
+        zapis = 0
+        validacija_projekta = 0
+        id_projekta = id_projekta + 1
 @dp.message((F.text.lower()=="закрыть этап проекта"))
 @dp.message((F.text.lower()=="zakr_etap_projekt"))
 async def zakr_etap_projekta(message: types.Message,state: FSMContext):
@@ -699,6 +707,9 @@ async def poluch_artik_projekta(message: types.Message,state: FSMContext):
             return
 @dp.message(VypEtap_Projekta.nomer_etapa, F.text.lower())
 async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext):
+    global projekti_artikul
+    global proverka_1
+    global proverka_2
     await message.answer(text="Проверка и регистрация этапа",reply_markup=ReplyKeyboardRemove())
     while True:
         try:
@@ -715,7 +726,6 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             await message.answer(text="Введи этап проекта, который хотите завершить корректно, дятел",reply_markup=klava_nomera_etapov)
             await state.set_state(VypEtap_Projekta.nomer_etapa)
             return
-    global projekti_artikul
     data = await state.get_data()
     artikul_poisk= int(data.get("artikul", None))
     bukva_projekta_vvod =(data.get("bukva", None)).lower()
@@ -773,7 +783,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             # закрытие соединенмя с ДБ для безопасности
             cursor.close()
             connection.close()
-            print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+            await message.answer(text="Поздравляю, этал закрыт")
+            projekti_artikul = 0
+            proverka_1 = 0
+            proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk)-1] and etap_poisk == 2:
             if prodvizenije_fakt[(etap_poisk)-1-1]==1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -788,7 +801,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 3:
             if prodvizenije_fakt[(etap_poisk)-1-1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -803,7 +819,8 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 4:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -818,7 +835,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 5:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -833,7 +853,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 6:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -848,7 +871,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 7:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -863,7 +889,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 8:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -878,7 +907,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 9:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -893,7 +925,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 10:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
                 await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
@@ -908,7 +943,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, этал закрыт")
+                projekti_artikul = 0
+                proverka_1 = 0
+                proverka_2 = 0
             else:
                 await message.answer(text="bebebe")
         else:
