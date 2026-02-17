@@ -44,7 +44,7 @@ kolvo_privychek=0
 kontrol_dney=0
 id=1
 id_zametki=1
-id_privycki=1
+id_privycki=0
 nov_id_privycki=1
 zapis=0
 zapis_dela=0
@@ -192,8 +192,8 @@ class Проект(Base):
 #INT NOT NULL, Этап_8 VARCHAR(128) NOT NULL, Завершенность_Этап_8 INT NOT NULL, Этап_9 VARCHAR(128) NOT NULL,
 #Завершенность_Этап_9 INT NOT NULL, Этап_10 VARCHAR(128) NOT NULL, Завершенность_Этап_10 INT NOT NULL, Дата_регистрации
 #VARCHAR(128) NOT NULL, Дата_изменения VARCHAR(128) NOT NULL)'''
-class Дела(Base):
-    __tablename__ = "Дела"
+class Дело(Base):
+    __tablename__ = "Дело"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
     Что_Cделать: Mapped[str] = mapped_column(String(128), nullable=False)
     Одноразовое_Проект: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -1262,7 +1262,7 @@ async def registjacija_dela(message: types.Message):
     global id_dela
     if validacija_dela==1 and zapis_dela==1:
         razovoje_delo_long.append(id_dela)
-        for i in range(len(razovoje_delo)):
+        for i in range(len(razovoje_delo)+1):
             razovoje_delo_long.append(razovoje_delo[i])
         tochnoje_vremja = str(datetime.now())
         vremja_dizain = tochnoje_vremja[:-10]
@@ -1270,7 +1270,6 @@ async def registjacija_dela(message: types.Message):
         razovoje_delo_long.append(vremja_dizain)
         razovoje_delo_long.append(otnetka_vremeni)
         delovoy_kartez=tuple(razovoje_delo_long)
-        print(delovoy_kartez)
         await message.answer(text=f"{delovoy_kartez}")
         await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
         import psycopg2 as ps
@@ -1279,7 +1278,7 @@ async def registjacija_dela(message: types.Message):
         cursor = connection.cursor()
         insert = '''INSERT INTO Дела (id, Что_Cделать, Одноразовое_Проект, Помошник, Группа_Задач, Срок_Выполнения, Отметка_времени, Синхронизация)
              VALUES(%s,%s,%s,%s,%s,%s,%s,%s)'''
-        cursor.execute(insert, (delovoy_kartez,))
+        cursor.execute(insert,delovoy_kartez)
         # синхронизация изменений, комит версии
         connection.commit()
         # закрытие соединенмя с ДБ для безопасности
@@ -1393,7 +1392,7 @@ async def cislo_ritualov(message: types.Message, state: FSMContext):
     cislo_ritualov = data.get("cislo_ritualov", None)
     privycka.append(cislo_ritualov)
     await state.clear()
-    await message.answer(text="Информация о привычке записана")
+    await message.answer(text="Информация о привычке записана",reply_markup=klava_privycek)
     await message.answer(text=f"{privycka}")
     zapis_privycki = 1
 @dp.message((F.text.lower()=="проверить запись привычки"))
@@ -1404,16 +1403,16 @@ async def proverka_privycki(message: types.Message):
     global privycka
     global validacija_privycki
     if len(privycka) == 0:
-        await message.answer(text="Нет данных для показа")
+        await message.answer(text="Нет данных для показа",reply_markup=klava_privycek)
     else:
         for i in range(len(privycka)):
             soobshenie=privycka[i]
             if soobshenie=="":
-                await message.answer(text ="Данные повреждены")
+                await message.answer(text ="Данные повреждены",reply_markup=klava_privycek)
                 break
             else:
                 await message.answer(text=f"{soobshenie}")
-        await message.answer(text="Вот сведения по новой привычки, Госпожа")
+        await message.answer(text="Вот сведения по новой привычки, Госпожа",reply_markup=klava_privycek)
         validacija_privycki=1
 @dp.message((F.text.lower()=="зарегистрировать привычку"))
 @dp.message((F.text.lower()=="/registracija_privycki"))
@@ -1457,12 +1456,12 @@ async def registracija_privycki(message: types.Message):
         zapis_privycki=0
         validacija_privycki=0
         privycka_long.clear()
-        await message.answer(text="Вставка успешно проведена моя Госпожа")
+        await message.answer(text="Вставка успешно проведена моя Госпожа",reply_markup=klava_privycek)
     elif zapis_privycki==0:
-        await message.answer(text="Нечего вводить в БД")
+        await message.answer(text="Нечего вводить в БД",reply_markup=klava_privycek)
         return
     elif validacija_privycki==0:
-        await message.answer(text="Данные не прошли валидацию, проверьте правильность данных записи")
+        await message.answer(text="Данные не прошли валидацию, проверьте правильность данных записи",reply_markup=klava_privycek)
         return
 @dp.message((F.text.lower()=="сбросить данные о привычке"))
 @dp.message((F.text.lower()=="/sbros_privycki"))
@@ -1523,7 +1522,7 @@ async def artukul_navyka(message: types.Message, state: FSMContext):
         artikul_fakt =int(svedenija_privycka[0])
         if artikul_vvod ==artikul_fakt:
             await message.answer(text="Привычка с таким артикулом действительно существует")
-            await message.answer(text="Проводим проверку сооствествия введенного порядкового номера привычки и сооствествующего навыка")
+            await message.answer(text="Проводим проверку сооствествия введенного порядкового номера привычки и сооствествующего навыка",reply_markup=klava_privycek)
             zadacha_navyka_fakt=svedenija_privycka[1]
             celevoje_kolichestvo=svedenija_privycka[2]
             bukva_fakt_GR=zadacha_navyka_fakt[0]
