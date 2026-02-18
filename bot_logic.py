@@ -195,7 +195,7 @@ class Проект(Base):
 class Дело(Base):
     __tablename__ = "Дела"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
-    Что_Cделать: Mapped[str] = mapped_column(String(128), nullable=False)
+    Трудовая_Задача: Mapped[str] = mapped_column(String(128), nullable=False)
     Одноразовое_Проект: Mapped[str] = mapped_column(String(32), nullable=False)
     Помошник: Mapped[str] = mapped_column(String(32), nullable=False)
     Группа_Задач: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -1279,7 +1279,7 @@ async def registjacija_dela(message: types.Message):
         connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
-        insert = '''INSERT INTO Дела (id, Что_Cделать, Одноразовое_Проект, Помошник, Группа_Задач, Срок_Выполнения, Отметка_времени, Синхронизация)
+        insert = '''INSERT INTO Дела (id, Трудовая_Задача, Одноразовое_Проект, Помошник, Группа_Задач, Срок_Выполнения, Отметка_времени, Синхронизация)
              VALUES(%s,%s,%s,%s,%s,%s,%s,%s)'''
         cursor.execute(insert,delovoy_kartez)
         # синхронизация изменений, комит версии
