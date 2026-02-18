@@ -193,7 +193,7 @@ class Проект(Base):
 #Завершенность_Этап_9 INT NOT NULL, Этап_10 VARCHAR(128) NOT NULL, Завершенность_Этап_10 INT NOT NULL, Дата_регистрации
 #VARCHAR(128) NOT NULL, Дата_изменения VARCHAR(128) NOT NULL)'''
 class Дело(Base):
-    __tablename__ = "Дело"
+    __tablename__ = "Дела"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
     Что_Cделать: Mapped[str] = mapped_column(String(128), nullable=False)
     Одноразовое_Проект: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -1117,7 +1117,7 @@ async def tema_zametki(message: types.Message, state: FSMContext):
     zapros=str(data.get("tema_zametki"))
     print(zapros)
     import psycopg2 as ps
-    connection = ps.connect(host="localhost", database="Dela", user="postgres", password="Uspech4815162342")
+    connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
     # создание интерфейса для sql запроса
     cursor = connection.cursor()
     query = "SELECT * FROM Заметки WHERE Тема_1 = %s OR Тема_2 = %s OR Тема_3 = %s OR Тема_4 = %s OR Тема_5 = %s ORDER BY ID DESC;"
@@ -1249,7 +1249,7 @@ async def proverka_dela(message: types.Message):
                 break
             else:
                 await message.answer(text=f"{soobshenie}")
-        await message.answer(text="Вот сведения по составленной заметке, Госпожа")
+        await message.answer(text="Информация об деле проверена, данные готовы к записи")
         validacija_dela=1
 @dp.message((F.text.lower()=="зарегистрировать дело"))
 @dp.message((F.text.lower()=="/registacija_dela"))
@@ -1262,8 +1262,11 @@ async def registjacija_dela(message: types.Message):
     global id_dela
     if validacija_dela==1 and zapis_dela==1:
         razovoje_delo_long.append(id_dela)
-        for i in range(len(razovoje_delo)+1):
-            razovoje_delo_long.append(razovoje_delo[i])
+        razovoje_delo_long.append(razovoje_delo[0])
+        razovoje_delo_long.append(razovoje_delo[1])
+        razovoje_delo_long.append(razovoje_delo[2])
+        razovoje_delo_long.append(razovoje_delo[3])
+        razovoje_delo_long.append(razovoje_delo[4])
         tochnoje_vremja = str(datetime.now())
         vremja_dizain = tochnoje_vremja[:-10]
         otnetka_vremeni = int(time.time())
