@@ -688,9 +688,9 @@ async def bukva_projekta(message: types.Message,state: FSMContext):
     bukva_zapros=text.lower()
     for i in range(len(projekti_artikul)):
         katalog_projekta = projekti_artikul[i]
-        bukva_projekta=katalog_projekta[1]
-        print(bukva_projekta)
-        if bukva_zapros == bukva_projekta[0]:
+        nazv_projekta=katalog_projekta[1]
+        bukva_projekta=nazv_projekta[0]
+        if bukva_zapros == bukva_projekta.lower():
             await message.answer(text=f"{katalog_projekta}")
     await message.answer(text="Введи номер проекта, который хотите завершить",reply_markup=ReplyKeyboardRemove())
     await state.set_state(VypEtap_Projekta.artikul_projekta)
