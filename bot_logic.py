@@ -638,7 +638,7 @@ async def registracija_projekta(message: types.Message):
         await message.answer(text="Данные в буфере не прошли проверку, проверьте данные")
     if validacija_projekta == 1 and zapis == 1:
         projekt_long.append(id_projekta)
-        for i in range(1,26):
+        for i in range(1,27):
             soobshenie=0
             projekt_long.append(soobshenie)
         for i in range(12):
