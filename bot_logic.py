@@ -736,7 +736,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
     for i in range(len(projekti_artikul)):
         artikul_svoistva=projekti_artikul[i]
         artikul_baza=artikul_svoistva[0]
-        if artikul_poisk == artikul_baza:
+        if artikul_poisk == int(artikul_baza):
             await message.answer(text="Такой id есть в базе сверяю артикул по букве")
             nazvanije_projekta=artikul_svoistva[1]
             bukva_projekta_basa=(nazvanije_projekta[0]).lower()
