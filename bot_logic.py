@@ -93,6 +93,7 @@ class Base(DeclarativeBase):
 #__tablename__ = "Ступени_Обучения"
 #id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
 #Ступень_Обучения: Mapped[str] = mapped_column(String(128), nullable=False)
+# отправить запрос системе управления
 class Уроки(Base):
     __tablename__ = "Уроки"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
