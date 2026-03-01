@@ -201,6 +201,23 @@ class Проект(Base):
     Дата_регистрации: Mapped[str] = mapped_column(String(128), nullable=False)
     Дата_изменения: Mapped[str] = mapped_column(String(128), nullable=False)
     Синхронизация: Mapped[int] = mapped_column(nullable=False)
+class Проект_Архив(Base):
+    __tablename__ = "Проект_Архив"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Название_проекта: Mapped[str] = mapped_column(String(128), nullable=False)
+    Критерий_завершенности: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_1: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_2: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_3: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_4: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_5: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_6: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_7: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_8: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_9: Mapped[str] = mapped_column(String(128), nullable=False)
+    Этап_10: Mapped[str] = mapped_column(String(128), nullable=False)
+    Дата_внесения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Синхронизация: Mapped[int] = mapped_column(nullable=False)
 #CREATE table Проект(id BIGINT NOT NULL PRIMARY KEY, Название_проекта VARCHAR(128) NOT NULL, Критерий_завершенности VARCHAR(128) NOT NULL,
 #Завершённость_пректа INT NOT NULL, Этап_1 VARCHAR(128) NOT NULL, Завершенность_Этап_1 INT NOT NULL, Этап_2 VARCHAR(128)
 #NOT NULL, Завершенность_Этап_2 INT NOT NULL, Этап_3 VARCHAR(128) NOT NULL, Завершенность_Этап_3 INT NOT NULL, Этап_4
@@ -228,6 +245,7 @@ from aiogram.filters import CommandStart, Command, or_f
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 # импорты для машины конечных состояний
 from aiogram.fsm.state import State, StatesGroup
+from fsm_strategy import Sostavlenije_Zamekti, Poisk_ZametKi, Sbornik_ZametKi, Projekt_V_Arhiv
 from aiogram.types import BotCommand
 import psycopg2 as ps
 from colorama import *
@@ -462,7 +480,7 @@ async def organizer_glav(message: types.Message):
 klava_projekt=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="ввод проекта"),KeyboardButton(text="проверка проекта")],
     [KeyboardButton(text="регистрация проекта"),KeyboardButton(text="закрыть этап проекта")],
-    [KeyboardButton(text="архив сделанных проектов"),KeyboardButton(text="выход")]],
+    [KeyboardButton(text="готовый проект в архив"),KeyboardButton(text="выход")]],
     resize_keyboard=True,input_field_placeholder="Выберите, с каким аспектом проекта хотите поработать")
 klava_alfavit_projektov=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="А"),KeyboardButton(text="Б"),KeyboardButton(text="В"),KeyboardButton(text="Г"),KeyboardButton(text="Д"),KeyboardButton(text="Е")],
@@ -974,6 +992,25 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 await message.answer(text="bebebe")
         else:
             await message.answer(text="hahahaha")
+@dp.message((F.text.lower()=="готовый проект в архив"))
+async def projekt_arhiv_1(message: types.Message, state: FSMContext):
+    await message.answer(text="Начинаем архивацию проекта")
+    await message.answer(text="Выбери букву, на которую начинается название проекта",reply_markup=klava_alfavit_projektov)
+    await state.set_state(Projekt_V_Arhiv.bukva_arhiv_projekta)
+@dp.message(Projekt_V_Arhiv.bukva_arhiv_projekta, F.text.lower())
+async def projekt_arhiv_2(message: types.Message,state: FSMContext):
+    await state.update_data(bukva=message.text)
+    global projekti_artikul
+    text=message.text
+    bukva_zapros=text.lower()
+    for i in range(len(projekti_artikul)):
+        katalog_projekta = projekti_artikul[i]
+        nazv_projekta=katalog_projekta[1]
+        bukva_projekta=nazv_projekta[0]
+        if bukva_zapros == bukva_projekta.lower():
+            await message.answer(text=f"{katalog_projekta}")
+    await message.answer(text="Введи номер проекта, который хотите завершить",reply_markup=ReplyKeyboardRemove())
+    await state.set_state(Projekt_V_Arhiv.artikul_arhiv_projekta)
 ########################################################################################################################
 klava_zametok = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="ввод заметки"), KeyboardButton(text="проверка заметки")],
@@ -985,17 +1022,6 @@ klava_zametok = ReplyKeyboardMarkup(keyboard=[
 @dp.message((F.text.lower()=="заметка"))
 async def zametka_glav(message: types.Message):
     await message.answer(text="Начинаем работать с заметками",reply_markup=klava_zametok)
-class Sostavlenije_Zamekti(StatesGroup):
-    tekst_zametki=State()
-    tema1_zametki=State()
-    tema2_zametki=State()
-    tema3_zametki=State()
-    tema4_zametki=State()
-    tema5_zametki=State()
-class Poisk_ZametKi(StatesGroup):
-    tema_zametki=State()
-class Sbornik_ZametKi(StatesGroup):
-    tema_sbornika=State()
 @dp.message((F.text.lower()=="/vvod_zametki"))
 @dp.message((F.text.lower()=="ввод заметки"))
 async def sostavjenie_zametki(message: types.Message, state: FSMContext):
