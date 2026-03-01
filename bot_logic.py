@@ -109,6 +109,22 @@ class Уроки(Base):
     Что_Делали_На_Уроке: Mapped[str] = mapped_column(Text, nullable=False)
     Задание_На_Дом: Mapped[str] = mapped_column(String(128), nullable=False)
     Примечание: Mapped[str] = mapped_column(Text, nullable=False)
+class Уроки_Архив(Base):
+    __tablename__ = "Уроки_Архив"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    Имя_Преподавателя: Mapped[str] = mapped_column(String(128), nullable=False)
+    Фамилия_Преподавателя: Mapped[str] = mapped_column(String(128), nullable=False)
+    Предмет_Обучения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Имя_Ученика: Mapped[str] = mapped_column(String(128), nullable=False)
+    Фамилия_Ученика: Mapped[str] = mapped_column(String(128), nullable=False)
+    Ступень_Обучения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Дата_Проведения: Mapped[str] = mapped_column(String(128), nullable=False)
+    Время_Начала: Mapped[str] = mapped_column(String(128), nullable=False)
+    Длительность_Занятия_Мин: Mapped[int]
+    Стоимость_Занятия_Центов: Mapped[int]
+    Что_Делали_На_Уроке: Mapped[str] = mapped_column(Text, nullable=False)
+    Задание_На_Дом: Mapped[str] = mapped_column(String(128), nullable=False)
+    Примечание: Mapped[str] = mapped_column(Text, nullable=False)
 class Календарные(Base):
     __tablename__ = "Календарные"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
@@ -671,7 +687,7 @@ async def registracija_projekta(message: types.Message):
         print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Вставка выполнена, моя Госпожа!')
         await message.answer(text="Регистрация проекта в БД выполнена")
         projekt.clear()
-        projekt_long.clear
+        projekt_long.clear()
         zapis = 0
         validacija_projekta = 0
         id_projekta = id_projekta + 1
