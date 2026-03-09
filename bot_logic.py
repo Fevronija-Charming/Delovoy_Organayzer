@@ -829,7 +829,6 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             cursor.close()
             connection.close()
             await message.answer(text="Поздравляю, этап закрыт",reply_markup=klava_projekt)
-            projekti_artikul = 0
             proverka_1 = 0
             proverka_2 = 0
             await state.clear()
@@ -866,7 +865,6 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 cursor.close()
                 connection.close()
                 await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
-                projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -939,7 +937,6 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 cursor.close()
                 connection.close()
                 await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
-                projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
