@@ -828,7 +828,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             # закрытие соединенмя с ДБ для безопасности
             cursor.close()
             connection.close()
-            await message.answer(text="Поздравляю, этал закрыт")
+            await message.answer(text="Поздравляю, этап закрыт")
             projekti_artikul = 0
             proverka_1 = 0
             proverka_2 = 0
@@ -846,7 +846,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
@@ -864,7 +864,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
         elif pokazatel_uspecha == prodvizenije[(etap_poisk) - 1] and etap_poisk == 4:
             if prodvizenije_fakt[(etap_poisk) - 1 - 1] == 1:
@@ -898,7 +898,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
@@ -916,7 +916,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
@@ -934,7 +934,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
@@ -952,7 +952,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
@@ -970,7 +970,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
@@ -988,14 +988,14 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этал закрыт")
+                await message.answer(text="Поздравляю, этап закрыт")
                 projekti_artikul = 0
                 proverka_1 = 0
                 proverka_2 = 0
             else:
                 await message.answer(text="bebebe")
         else:
-            await message.answer(text="hahahaha")
+            await message.answer(text="Этот этап уже и так закрыт")
 @dp.message((F.text.lower()=="готовый проект в архив"))
 async def projekt_arhiv_1(message: types.Message, state: FSMContext):
     await message.answer(text="Начинаем архивацию проекта")
