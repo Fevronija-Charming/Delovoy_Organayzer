@@ -730,8 +730,13 @@ async def bukva_projekta(message: types.Message,state: FSMContext):
         bukva_projekta=nazv_projekta[0]
         if bukva_zapros == bukva_projekta.lower():
             await message.answer(text=f"{katalog_projekta}")
-    await message.answer(text="Введи номер проекта, который хотите завершить",reply_markup=ReplyKeyboardRemove())
-    await state.set_state(VypEtap_Projekta.artikul_projekta)
+            naydennost=1
+    if naydennost==1:
+        await message.answer(text="Введи номер проекта, который хотите завершить",reply_markup=ReplyKeyboardRemove())
+        await state.set_state(VypEtap_Projekta.artikul_projekta)
+    else:
+        await message.answer(text="На данную букву в базе проекты отсутсвуют",reply_markup=klava_projekt)
+        await state.clear()
 @dp.message(VypEtap_Projekta.artikul_projekta, F.text.lower())
 async def poluch_artik_projekta(message: types.Message,state: FSMContext):
     text=message.text
