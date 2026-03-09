@@ -71,6 +71,7 @@ proverka_2=0
 proverka_3=0
 proverka_4=0
 proverka_5=0
+naidennost=0
 #работа с базой данных
 from sqlalchemy import  DateTime, String, Float, Column, Integer, func, Text, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -670,6 +671,7 @@ async def registracija_projekta(message: types.Message):
     global projekt_long
     global id_projekta
     global validacija_projekta
+    global naidennost
     if zapis == 0:
         await message.answer(text="Данные в буфере по проекту отстутствуют, заполните буфер")
     if validacija_projekta == 0:
