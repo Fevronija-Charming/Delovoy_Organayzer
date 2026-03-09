@@ -819,7 +819,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Строчка изменена, моя Госпожа!')
+                await message.answer(text="Поздравляю, проект завершён", reply_markup=klava_projekt)
+                proverka_1 = 0
+                proverka_2 = 0
+                await state.clear()
             else:
                 await message.answer(text="Loshara")
         elif pokazatel_uspecha == prodvizenije[(etap_poisk)-1] and etap_poisk == 1:
