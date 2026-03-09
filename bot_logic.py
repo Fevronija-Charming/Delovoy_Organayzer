@@ -71,7 +71,7 @@ proverka_2=0
 proverka_3=0
 proverka_4=0
 proverka_5=0
-naidennost=0
+naydennost=0
 #работа с базой данных
 from sqlalchemy import  DateTime, String, Float, Column, Integer, func, Text, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
