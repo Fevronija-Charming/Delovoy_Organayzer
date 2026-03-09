@@ -785,10 +785,10 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             await message.answer(text=f"{bukva_projekta_basa}")
             await message.answer(text=f"{bukva_projekta_vvod}")
             break
-        else:
-            await message.answer(text="Такой id нет в базе")
-            await state.clear()
-            return
+    if proverka_1==0:
+        await message.answer(text="Такой id нет в базе")
+        await state.clear()
+        return
     if proverka_1 == 1:
         if bukva_projekta_basa == bukva_projekta_vvod:
             await message.answer(text="Буква в названии проекта совпадает с заявленной, проверяю соостветствие этапов")
@@ -1038,7 +1038,6 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
             nazvanije_projekta=artikul_svoistva[1]
             bukva_projekta_basa=(nazvanije_projekta[0]).lower()
             zavershennost=artikul_svoistva[3]
-            proverka_3=1
             projekti_arhiv=[]
             projekti_arhiv.append(nazvanije_projekta)
             kriteryi_zaversh=artikul_svoistva[2]
@@ -1066,12 +1065,13 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
             tochnoje_vremja = str(datetime.now())
             projekti_arhiv.append(tochnoje_vremja[:-10])
             projekti_arhiv.append(int(time.time()))
+            proverka_3=1
             await message.answer(text="Такой id есть в базе данных, сверяю артикул по букве")
             break
-        else:
-            await message.answer(text="Проекта под данным id не обнаружено")
-            await state.clear()
-            return
+    if proverka_3==0:
+        await message.answer(text="Проекта под данным id не обнаружено")
+        await state.clear()
+        return
     bukva_vvod=await data.get("bukva", None)
     if bukva_vvod == bukva_projekta_basa:
         await message.answer(text="Начальная буква проекта и id проекта совпадают, проивожу проаерку завершенности проекта")
