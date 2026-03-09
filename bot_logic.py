@@ -766,9 +766,8 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 break
         except ValueError:
             await message.answer(text="Введи этап проекта, который хотите завершить корректно, дятел",reply_markup=klava_nomera_etapov)
-            await state.set_state(VypEtap_Projekta.nomer_etapa)
+            await state.clear()
             return
-    data = await state.get_data()
     artikul_poisk= int(data.get("artikul", None))
     bukva_projekta_vvod =(data.get("bukva", None)).lower()
     for i in range(len(projekti_artikul)):
@@ -788,6 +787,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             break
         else:
             await message.answer(text="Такой id нет в базе")
+            await state.clear()
             return
     if proverka_1 == 1:
         if bukva_projekta_basa == bukva_projekta_vvod:
@@ -795,6 +795,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             proverka_2 = 1
         else:
             await message.answer(text="Буква в названии не соотсветствует введенной")
+            await state.clear()
             return
     if proverka_2 == 1 and proverka_1 == 1:
         if etap_poisk == 100:
