@@ -812,7 +812,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
                 # создание интерфейса для sql запроса
                 cursor = connection.cursor()
-                edit = '''UPDATE Проект SET Завершённость_пректа=1 WHERE id=%s'''
+                edit = '''UPDATE Проект SET Завершённость_проекта=1 WHERE id=%s'''
                 cursor.execute(edit, (artikul_poisk,))
                 # синхронизация изменений, комит версии
                 connection.commit()
