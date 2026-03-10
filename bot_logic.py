@@ -824,7 +824,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 proverka_2 = 0
                 await state.clear()
             else:
-                await message.answer(text="Loshara")
+                await message.answer(text="Проект и так уже был завершён, выполните архивацию проекта")
         elif pokazatel_uspecha == prodvizenije[(etap_poisk)-1] and etap_poisk == 1:
             await message.answer(text="Правильность очередности этапов подтверждена выполняю вставку в БД")
             import psycopg2 as ps
