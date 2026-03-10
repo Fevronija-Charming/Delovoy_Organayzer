@@ -647,7 +647,7 @@ async def final(message: types.Message, state: FSMContext):
     await message.answer(text=f"{etap1}")
     projekt.append(etap10)
     await state.clear()
-    await message.answer(text="Проект записан")
+    await message.answer(text="Проект записан", reply_markup=klava_projekt)
     zapis=1
 @dp.message((F.text.lower()=="/proverka_projekta"))
 @dp.message((F.text.lower()=="проверка проекта"))
@@ -660,7 +660,7 @@ async def proverka_buf(message: types.Message):
         for i in range(len(projekt)):
             soobshenie=projekt[i]
             await message.answer(text = f"{soobshenie}")
-        await message.answer(text="Вот сведения по записанному проекту, Госпожа")
+        await message.answer(text="Вот сведения по записанному проекту, Госпожа",reply_markup=klava_glav)
         validacija_projekta=1
 @dp.message((F.text.lower()=="/registracija_projekta"))
 @dp.message((F.text.lower()=="регистрация проекта"))
@@ -709,7 +709,7 @@ async def registracija_projekta(message: types.Message):
         cursor.close()
         connection.close()
         print(Back.GREEN + Fore.BLACK + Style.BRIGHT + 'Вставка выполнена, моя Госпожа!')
-        await message.answer(text="Регистрация проекта в БД выполнена")
+        await message.answer(text="Регистрация проекта в БД выполнена",reply_markup=klava_glav)
         projekt.clear()
         projekt_long.clear()
         zapis = 0
@@ -819,7 +819,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, проект завершён", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, проект завершён", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -838,7 +838,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
             # закрытие соединенмя с ДБ для безопасности
             cursor.close()
             connection.close()
-            await message.answer(text="Поздравляю, этап закрыт",reply_markup=klava_projekt)
+            await message.answer(text="Поздравляю, этап закрыт",reply_markup=klava_glav)
             proverka_1 = 0
             proverka_2 = 0
             await state.clear()
@@ -856,7 +856,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -874,7 +874,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт",reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -892,7 +892,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -910,7 +910,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -928,7 +928,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -946,7 +946,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -964,7 +964,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -982,7 +982,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
@@ -1000,7 +1000,7 @@ async def proverka_i_registracija_etapa(message: types.Message,state: FSMContext
                 # закрытие соединенмя с ДБ для безопасности
                 cursor.close()
                 connection.close()
-                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_projekt)
+                await message.answer(text="Поздравляю, этап закрыт", reply_markup=klava_glav)
                 proverka_1 = 0
                 proverka_2 = 0
                 await state.clear()
