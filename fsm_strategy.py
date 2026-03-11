@@ -14,3 +14,6 @@ class Sbornik_ZametKi(StatesGroup):
 class Projekt_V_Arhiv(StatesGroup):
     bukva_arhiv_projekta=State()
     artikul_arhiv_projekta=State()
+class Projekt_Pokaz_Etapy(StatesGroup):
+    bukva_pokaz_projekta = State()
+    artikul_pokaz_projekta = State()
