@@ -577,11 +577,14 @@ async def etapy_projekta_3(message: types.Message,state: FSMContext):
         await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
     for i in range(len(etapy_projektov_svodka)):
         projekt_svedenije=etapy_projektov_svodka[i]
+        print(projekt_svedenije)
         nomer_projekta_baza=projekt_svedenije[0]
+        print(nomer_projekta_baza)
+        print(nomer_projekta_vvod)
         if nomer_projekta_baza==nomer_projekta_vvod:
             await message.answer(text="Вот сведения по данному проекту")
             await message.answer(text=f"{projekt_svedenije}")
-            await state.clear()
+    await state.clear()
 @dp.message((F.text.lower()=="/vvod_projekta"))
 @dp.message((F.text.lower()=="ввод проекта"))
 async def sostavjenie_projekta(message: types.Message, state: FSMContext):
