@@ -1134,7 +1134,7 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
         # создание интерфейса для sql запроса
         cursor = connection.cursor()
-        zapros = "DELETE * FROM Проект WHERE id= %s;"
+        zapros = "DELETE FROM Проект WHERE id= %s;"
         # отправить запрос системе управления
         cursor.execute(zapros, (int(artikul_fakt),))
         connection.commit()
