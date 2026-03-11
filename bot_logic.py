@@ -74,6 +74,7 @@ proverka_3=0
 proverka_4=0
 proverka_5=0
 naydennost=0
+id_proverka_arhiv=0
 #работа с базой данных
 from sqlalchemy import  DateTime, String, Float, Column, Integer, func, Text, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -1111,16 +1112,24 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         await state.clear()
         return
     vybor_projekta=projekti_artikul[int(pozicija)]
-    print(vybor_projekta)
     zaverhennost=vybor_projekta[4]
-    print(zaverhennost)
     if zaverhennost == 1:
         await message.answer(text="Проверка успешности завершена, проивожу архивацию проекта")
         proverka_5 = 1
-    if proverka_5 == 1 and proverka_4 == 1 and proverka_3 == 1:
-        print(projekt_v_arhiv)
+    else:
+        await message.answer(text="Проект не доделан, пожалуйста, завершите все его этапы")
         await state.clear()
-
+    if proverka_5 == 1 and proverka_4 == 1 and proverka_3 == 1:
+        projekt_v_arhiv[0]=id_proverka_arhiv
+        projekt_eksempljar = Проект_Архив(id=projekt_v_arhiv[0], Название_Проекта=projekt_v_arhiv[0], Критерий_Завершенности=projekt_v_arhiv[1],
+        Этап_1=projekt_v_arhiv[2], Этап_2=projekt_v_arhiv[3], Этап_3=projekt_v_arhiv[4], Этап_4=projekt_v_arhiv[5], Этап_5=projekt_v_arhiv[6],
+        Этап_6=projekt_v_arhiv[7], Этап_7=projekt_v_arhiv[8], Этап_8=projekt_v_arhiv[9], Этап_9=projekt_v_arhiv[10], Этап_10=projekt_v_arhiv[11],
+                                  Дата_внесения=projekt_v_arhiv[12], Синхронизация=projekt_v_arhiv[13])
+        session = session_factory()
+        session.add(projekt_eksempljar)
+        await session.commit()
+        await session.close()
+        await message.answer(text="запись в архив внесена")
         #await state.update_data(bukva=message.text)
     #global projekti_artikul
     #text=message.text
