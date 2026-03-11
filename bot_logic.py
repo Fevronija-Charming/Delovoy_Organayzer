@@ -1101,7 +1101,7 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         await message.answer(text="Проекта под данным id не обнаружено")
         await state.clear()
         return
-    bukva_vvod=await data.get("bukva", None)
+    bukva_vvod=data.get("bukva", None)
     if bukva_vvod == bukva_fakt:
         await message.answer(text="Начальная буква проекта и id проекта совпадают, проивожу проаерку завершенности проекта")
         proverka_4 = 1
