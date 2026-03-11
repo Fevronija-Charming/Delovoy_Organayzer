@@ -1104,14 +1104,16 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         return
     bukva_vvod=data.get("bukva", None)
     if bukva_vvod == bukva_fakt:
-        await message.answer(text="Начальная буква проекта и id проекта совпадают, проивожу проаерку завершенности проекта")
+        await message.answer(text="Начальная буква проекта и id проекта совпадают, проивожу проверку завершенности проекта")
         proverka_4 = 1
     else:
         await message.answer(text="Начальная буква проекта и id проекта не совпадают")
         await state.clear()
         return
     vybor_projekta=projekti_artikul[int(pozicija)]
-    zaverhennost= vybor_projekta[3]
+    print(vybor_projekta)
+    zaverhennost=vybor_projekta[3]
+    print(zaverhennost)
     if zaverhennost == 1:
         await message.answer(text="Проверка успешности завершена, проивожу архивацию проекта")
         proverka_5 = 1
