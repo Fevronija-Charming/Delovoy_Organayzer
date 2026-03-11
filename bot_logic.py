@@ -1127,14 +1127,21 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         Дата_внесения=projekt_v_arhiv[13], Синхронизация=projekt_v_arhiv[14])
         session = session_factory()
         session.add(projekt_eksempljar)
-        await message.answer(text="запись в архив внесена")
-        gotovy_projekt=session.query(Проект).get(id=artikul_fakt)
-        if gotovy_projekt:
-            session.delete(gotovy_projekt)
         await session.commit()
+        await message.answer(text="запись в архив внесена")
         await session.close()
-
-        #await state.update_data(bukva=message.text)
+        import psycopg2 as ps
+        connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
+        # создание интерфейса для sql запроса
+        cursor = connection.cursor()
+        zapros = "DELETE * FROM Проект WHERE id= %s;"
+        # отправить запрос системе управления
+        cursor.execute(zapros, (int(artikul_fakt),))
+        connection.commit()
+        # закрытие соединенмя с ДБ для безопасности
+        cursor.close()
+        connection.close()
+        await message.answer(text="Готовый проект убран с рабочего стола")
     #global projekti_artikul
     #text=message.text
     #bukva_zapros=text.lower()
