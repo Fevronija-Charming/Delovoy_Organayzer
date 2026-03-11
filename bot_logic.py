@@ -1127,9 +1127,13 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         Дата_внесения=projekt_v_arhiv[13], Синхронизация=projekt_v_arhiv[14])
         session = session_factory()
         session.add(projekt_eksempljar)
+        await message.answer(text="запись в архив внесена")
+        gotovy_projekt=session.query(Проект).get(id=artikul_fakt)
+        if gotovy_projekt:
+            session.delete(gotovy_projekt)
         await session.commit()
         await session.close()
-        await message.answer(text="запись в архив внесена")
+
         #await state.update_data(bukva=message.text)
     #global projekti_artikul
     #text=message.text
