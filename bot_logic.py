@@ -578,8 +578,6 @@ async def etapy_projekta_3(message: types.Message,state: FSMContext):
     for i in range(len(etapy_projektov_svodka)):
         projekt_svedenije=etapy_projektov_svodka[i]
         nomer_projekta_baza=projekt_svedenije[0]
-        print(projekt_svedenije[0])
-        print(nomer_projekta_vvod)
         if nomer_projekta_baza==nomer_projekta_vvod:
             await message.answer(text="Вот сведения по данному проекту")
             await message.answer(text=f"{projekt_svedenije}")
