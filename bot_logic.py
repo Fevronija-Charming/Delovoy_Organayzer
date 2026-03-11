@@ -1079,6 +1079,7 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         await message.answer(text="Ошибка ввода. Введи артикул проекта заново")
         await state.set_state(Projekt_V_Arhiv.artikul_arhiv_projekta)
         return
+    pozicija=0
     for i in range(len(etapy_projektov_svodka)):
         # выбор строчки конкретного проекта
         projekty_vybor = etapy_projektov_svodka[i]
@@ -1086,16 +1087,16 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         artikul_fakt = projekty_vybor[0]
         nazvanije_fakt = projekty_vybor[1]
         bukva_fakt = nazvanije_fakt[0]
+        pozicija=pozicija+1
         if artikul_poisk == artikul_fakt:
             projekt_v_arhiv=[]
-            for i in range(len(projekty_vybor)):
-                projekt_v_arhiv.append(projekty_vybor[i])
+            for j in range(len(projekty_vybor)):
+                projekt_v_arhiv.append(projekty_vybor[j])
             tochnoje_vremja = str(datetime.now())
             projekt_v_arhiv.append(tochnoje_vremja[:-10])
             projekt_v_arhiv.append(int(time.time()))
             proverka_3=1
             await message.answer(text="Такой id есть в базе данных, сверяю артикул по букве")
-            pozicija=i
             break
     if proverka_3==0:
         await message.answer(text="Проекта под данным id не обнаружено")
