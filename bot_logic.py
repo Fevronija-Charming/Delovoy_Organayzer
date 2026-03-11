@@ -415,7 +415,6 @@ class ProjektySvodka(BaseMiddleware):
         if text == "проект":
             kolvo_projektov = 0
             projekti_artikul = []
-            projekt_predstv_etapov=[]
             etapy_projektov_svodka = []
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с проектами")
             # создание интерфейса для sql запроса
@@ -429,6 +428,7 @@ class ProjektySvodka(BaseMiddleware):
             while True:
                 next_row = cursor.fetchone()
                 if next_row:
+                    projekt_predstv_etapov = []
                     svjaz=[]
                     svjaz.append(next_row[0])
                     svjaz.append(next_row[1])
@@ -575,10 +575,8 @@ async def etapy_projekta_3(message: types.Message,state: FSMContext):
     except ValueError:
         await message.answer(text="Введи артикул, который хотите завершить, корректно!")
         await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
-    for i in range(kolvo_projektov):
-        print(etapy_projektov_svodka)
+    for i in range(len(etapy_projektov_svodka)):
         projekt_svedenije=etapy_projektov_svodka[i]
-        print(projekt_svedenije)
         nomer_projekta_baza=projekt_svedenije[0]
         print(projekt_svedenije[0])
         print(nomer_projekta_vvod)
