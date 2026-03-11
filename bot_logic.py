@@ -565,21 +565,23 @@ async def etapy_projekta_2(message: types.Message,state: FSMContext):
         await message.answer(text="На данную букву не нашлось не одного проекта")
         await state.clear()
     else:
-        await message.answer(text="Укажи порядковый номер проекта для просмотра его этапов")
+        await message.answer(text="Укажи порядковый номер проекта для просмотра его этапов", reply_markup=ReplyKeyboardRemove())
         await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
 @dp.message(Projekt_Pokaz_Etapy.artikul_pokaz_projekta, F.text)
 async def etapy_projekta_3(message: types.Message,state: FSMContext):
     try:
         artikul_projekta = message.text
-        nomer_projekta = int(artikul_projekta)
+        nomer_projekta_vvod = int(artikul_projekta)
     except ValueError:
         await message.answer(text="Введи артикул, который хотите завершить, корректно!")
         await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
     for i in range(len(etapy_projektov_svodka)):
         projekt_svedenije=etapy_projektov_svodka[i]
-        if nomer_projekta==projekt_svedenije[i]:
+        nomer_projekta_baza=projekt_svedenije[0]
+        if nomer_projekta_baza==nomer_projekta_vvod[i]:
             await message.answer(text="Вот сведения по данному проекту")
             await message.answer(text=f"{projekt_svedenije}")
+            await state.clear()
 @dp.message((F.text.lower()=="/vvod_projekta"))
 @dp.message((F.text.lower()=="ввод проекта"))
 async def sostavjenie_projekta(message: types.Message, state: FSMContext):
