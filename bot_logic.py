@@ -1087,7 +1087,6 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         artikul_fakt = projekty_vybor[0]
         nazvanije_fakt = projekty_vybor[1]
         bukva_fakt = nazvanije_fakt[0]
-        pozicija=pozicija+1
         if artikul_poisk == artikul_fakt:
             projekt_v_arhiv=[]
             for j in range(len(projekty_vybor)):
@@ -1096,6 +1095,7 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
             projekt_v_arhiv.append(tochnoje_vremja[:-10])
             projekt_v_arhiv.append(int(time.time()))
             proverka_3=1
+            pozicija=i
             await message.answer(text="Такой id есть в базе данных, сверяю артикул по букве")
             break
     if proverka_3==0:
@@ -1112,7 +1112,7 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         return
     vybor_projekta=projekti_artikul[int(pozicija)]
     print(vybor_projekta)
-    zaverhennost=vybor_projekta[3]
+    zaverhennost=vybor_projekta[4]
     print(zaverhennost)
     if zaverhennost == 1:
         await message.answer(text="Проверка успешности завершена, проивожу архивацию проекта")
