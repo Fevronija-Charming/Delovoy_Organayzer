@@ -502,7 +502,7 @@ klava_alfavit_projektov=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="А"),KeyboardButton(text="Б"),KeyboardButton(text="В"),KeyboardButton(text="Г"),KeyboardButton(text="Д"),KeyboardButton(text="Е")],
     [KeyboardButton(text="Ё"),KeyboardButton(text="Ж"),KeyboardButton(text="З"),KeyboardButton(text="И"),KeyboardButton(text="Й"),KeyboardButton(text="К")],
     [KeyboardButton(text="Л"),KeyboardButton(text="М"),KeyboardButton(text="Н"),KeyboardButton(text="О"),KeyboardButton(text="П"),KeyboardButton(text="Р")],
-    [KeyboardButton(text="C"),KeyboardButton(text="Т"),KeyboardButton(text="У"),KeyboardButton(text="Ф"),KeyboardButton(text="Х"),KeyboardButton(text="Ч")],
+    [KeyboardButton(text="С"),KeyboardButton(text="Т"),KeyboardButton(text="У"),KeyboardButton(text="Ф"),KeyboardButton(text="Х"),KeyboardButton(text="Ч")],
     [KeyboardButton(text="Ш"),KeyboardButton(text="Щ"),KeyboardButton(text="Ы"),KeyboardButton(text="Э"),KeyboardButton(text="Ю"),KeyboardButton(text="Я")]],
     resize_keyboard=True,input_field_placeholder="Начальная буква названия")
 klava_nomera_etapov=ReplyKeyboardMarkup(keyboard=[
@@ -1079,62 +1079,43 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         await message.answer(text="Ошибка ввода. Введи артикул проекта заново")
         await state.set_state(Projekt_V_Arhiv.artikul_arhiv_projekta)
         return
-    for i in range(len(projekti_artikul)):
+    for i in range(len(etapy_projektov_svodka)):
         # выбор строчки конкретного проекта
-        artikul_svoistva = projekti_artikul[i]
+        projekty_vybor = etapy_projektov_svodka[i]
         # выбор id конкретного проекта
-        artikul_baza = artikul_svoistva[0]
-        if artikul_poisk == int(artikul_baza):
-            nazvanije_projekta=artikul_svoistva[1]
-            bukva_projekta_basa=(nazvanije_projekta[0]).lower()
-            zavershennost=artikul_svoistva[3]
-            projekti_arhiv=[]
-            projekti_arhiv.append(nazvanije_projekta)
-            kriteryi_zaversh=artikul_svoistva[2]
-            projekti_arhiv.append(kriteryi_zaversh)
-            etap_1_arhiv=artikul_svoistva[4]
-            projekti_arhiv.append(etap_1_arhiv)
-            etap_2_arhiv = artikul_svoistva[6]
-            projekti_arhiv.append(etap_2_arhiv)
-            etap_3_arhiv = artikul_svoistva[8]
-            projekti_arhiv.append(etap_3_arhiv)
-            etap_4_arhiv = artikul_svoistva[10]
-            projekti_arhiv.append(etap_4_arhiv)
-            etap_5_arhiv = artikul_svoistva[12]
-            projekti_arhiv.append(etap_5_arhiv)
-            etap_6_arhiv = artikul_svoistva[14]
-            projekti_arhiv.append(etap_6_arhiv)
-            etap_7_arhiv = artikul_svoistva[16]
-            projekti_arhiv.append(etap_7_arhiv)
-            etap_8_arhiv = artikul_svoistva[18]
-            projekti_arhiv.append(etap_8_arhiv)
-            etap_9_arhiv = artikul_svoistva[20]
-            projekti_arhiv.append(etap_9_arhiv)
-            etap_10_arhiv = artikul_svoistva[22]
-            projekti_arhiv.append(etap_10_arhiv)
+        artikul_fakt = projekty_vybor[0]
+        nazvanije_fakt = projekty_vybor[1]
+        bukva_fakt = nazvanije_fakt[0]
+        if artikul_poisk == artikul_fakt:
+            projekt_v_arhiv=[]
+            for i in range(len(projekty_vybor)):
+                projekt_v_arhiv.append(projekty_vybor[i])
             tochnoje_vremja = str(datetime.now())
-            projekti_arhiv.append(tochnoje_vremja[:-10])
-            projekti_arhiv.append(int(time.time()))
+            projekt_v_arhiv.append(tochnoje_vremja[:-10])
+            projekt_v_arhiv.append(int(time.time()))
             proverka_3=1
             await message.answer(text="Такой id есть в базе данных, сверяю артикул по букве")
+            pozicija=i
             break
     if proverka_3==0:
         await message.answer(text="Проекта под данным id не обнаружено")
         await state.clear()
         return
     bukva_vvod=await data.get("bukva", None)
-    if bukva_vvod == bukva_projekta_basa:
+    if bukva_vvod == bukva_fakt:
         await message.answer(text="Начальная буква проекта и id проекта совпадают, проивожу проаерку завершенности проекта")
         proverka_4 = 1
     else:
         await message.answer(text="Начальная буква проекта и id проекта не совпадают")
         await state.clear()
         return
-    if zavershennost == 1:
+    vybor_projekta=projekti_artikul[int(pozicija)]
+    zaverhennost= vybor_projekta[3]
+    if zaverhennost == 1:
         await message.answer(text="Проверка успешности завершена, проивожу архивацию проекта")
         proverka_5 = 1
     if proverka_5 == 1 and proverka_4 == 1 and proverka_3 == 1:
-        print(projekti_arhiv)
+        print(projekt_v_arhiv)
         await state.clear()
 
         #await state.update_data(bukva=message.text)
