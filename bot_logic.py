@@ -453,7 +453,6 @@ class ProjektySvodka(BaseMiddleware):
                         nov_id_projekta = id
                 else:
                     break
-            connection.commit()
             # закрытие соединенмя с ДБ для безопасности
             cursor.close()
             connection.close()
@@ -489,9 +488,9 @@ async def organizer_glav(message: types.Message):
     print("Начало работы с органайзером")
 @dp.message((F.text.lower()=="/exit"))
 @dp.message((F.text.lower()=="выход"))
-async def organizer_glav(message: types.Message):
+async def vyhod_sbros(message: types.Message,state: FSMContext):
     await message.answer(text="Выход",reply_markup=ReplyKeyboardRemove())
-    print("Выход")
+    await state.clear()
 # СКРИПТ УПРАВЛЯЮЩИЙ ПРОЕКТАМИ
 klava_projekt=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="ввод проекта"),KeyboardButton(text="проверка проекта")],
@@ -547,11 +546,12 @@ class VypEtap_Projekta(StatesGroup):
     nomer_etapa = State()
 @dp.message((F.text.lower()=="посмотреть этапы проекта"))
 async def etapy_projekta_1(message: types.Message, state: FSMContext):
-    await message.answer(text="Укажи первую букву, на которую начинается название проекта")
+    await message.answer(text="Укажи первую букву, на которую начинается название проекта",reply_markup=klava_alfavit_projektov)
     await state.set_state(Projekt_Pokaz_Etapy.bukva_pokaz_projekta)
 @dp.message(Projekt_Pokaz_Etapy.bukva_pokaz_projekta, F.text)
 async def etapy_projekta_2(message: types.Message,state: FSMContext):
     text = message.text
+    match_counter=0
     bukva_zapros = text.lower()
     for i in range(len(projekti_artikul)):
         katalog_projekta = projekti_artikul[i]
@@ -560,6 +560,26 @@ async def etapy_projekta_2(message: types.Message,state: FSMContext):
         peremycka=(" : ")
         if bukva_zapros == bukva_projekta.lower():
             await message.answer(text=f"{katalog_projekta[0]}{peremycka}{katalog_projekta[1]}")
+        match_counter = match_counter + 1
+    if match_counter == 0:
+        await message.answer(text="На данную букву не нашлось не одного проекта")
+        await state.clear()
+    else:
+        await message.answer(text="Укажи порядковый номер проекта для просмотра его этапов")
+        await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
+@dp.message(Projekt_Pokaz_Etapy.artikul_pokaz_projekta, F.text)
+async def etapy_projekta_3(message: types.Message,state: FSMContext):
+    try:
+        artikul_projekta = message.text
+        nomer_projekta = int(artikul_projekta)
+    except ValueError:
+        await message.answer(text="Введи артикул, который хотите завершить, корректно!")
+        await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
+    for i in range(len(etapy_projektov_svodka)):
+        projekt_svedenije=etapy_projektov_svodka[i]
+        if nomer_projekta==projekt_svedenije[i]:
+            await message.answer(text="Вот сведения по данному проекту")
+            await message.answer(text=f"{projekt_svedenije}")
 @dp.message((F.text.lower()=="/vvod_projekta"))
 @dp.message((F.text.lower()=="ввод проекта"))
 async def sostavjenie_projekta(message: types.Message, state: FSMContext):
