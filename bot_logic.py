@@ -31,6 +31,9 @@ projekt=[]
 projekt_long=[]
 projekt_predstv_etapov=[]
 etapy_projektov_svodka=[]
+cislo_projekt_arhiv=0
+id_projekt_arhiv=0
+nov_id_projekt_arhiv=0
 razovoje_delo=[]
 razovoje_delo_long=[]
 kalendarnoje=[]
@@ -413,11 +416,32 @@ class ProjektySvodka(BaseMiddleware):
         global projekti_artikul
         global projekt_predstv_etapov
         global etapy_projektov_svodka
+        global cislo_projekt_arhiv
+        global id_projekt_arhiv
+        global nov_id_projekt_arhiv
         if text == "проект":
             kolvo_projektov = 0
+            cislo_projekt_arhiv = 0
             projekti_artikul = []
             etapy_projektov_svodka = []
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с проектами")
+            # создание интерфейса для sql запроса
+            import psycopg2 as ps
+            connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"),
+            password=os.getenv("DBPASSWORD"))
+            # создание интерфейса для sql запроса
+            cursor = connection.cursor()
+            zapros = "SELECT * from Проект_Архив;"
+            # отправить запрос системе управления
+            cursor.execute(zapros)
+            while True:
+                next_row = cursor.fetchone()
+                if next_row:
+                    cislo_projekt_arhiv = cislo_projekt_arhiv + 1
+                    if next_row[0] > id_projekt_arhiv:
+                        id_projekt_arhiv = next_row[0]
+                else:
+                    break
             # создание интерфейса для sql запроса
             import psycopg2 as ps
             connection = ps.connect(host=os.getenv("DBHOST"), database=os.getenv("DBNAME"), user=os.getenv("DBUSER"), password=os.getenv("DBPASSWORD"))
@@ -458,9 +482,11 @@ class ProjektySvodka(BaseMiddleware):
             cursor.close()
             connection.close()
             id_projekta = nov_id_projekta + 1
+            nov_id_projekt_arhiv=id_projekt_arhiv + 1
             await self.bot.send_message(chat_id=user_id, text=f"{'Следующий доступный номер проекта: '}{id_projekta}")
             await self.bot.send_message(chat_id=user_id, text=f"{'Всего записей:'}{kolvo_projektov}")
             await self.bot.send_message(chat_id=user_id, text=f"{'Проекты:'}{projekti_artikul}")
+            await self.bot.send_message(chat_id=user_id, text=f"{'Проектов в архиве:'}{cislo_projekt_arhiv}")
             return await handler(event, data)
         else:
             return await handler(event, data)
@@ -1120,7 +1146,7 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
         await message.answer(text="Проект не доделан, пожалуйста, завершите все его этапы")
         await state.clear()
     if proverka_5 == 1 and proverka_4 == 1 and proverka_3 == 1:
-        projekt_v_arhiv[0]=id_proverka_arhiv
+        projekt_v_arhiv[0]=nov_id_projekt_arhiv
         projekt_eksempljar = Проект_Архив(id=projekt_v_arhiv[0], Название_проекта=projekt_v_arhiv[1], Критерий_завершенности=projekt_v_arhiv[2],
         Этап_1=projekt_v_arhiv[3], Этап_2=projekt_v_arhiv[4], Этап_3=projekt_v_arhiv[5], Этап_4=projekt_v_arhiv[6], Этап_5=projekt_v_arhiv[7],
         Этап_6=projekt_v_arhiv[8], Этап_7=projekt_v_arhiv[9], Этап_8=projekt_v_arhiv[10], Этап_9=projekt_v_arhiv[11], Этап_10=projekt_v_arhiv[12],
