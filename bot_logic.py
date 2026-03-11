@@ -463,7 +463,6 @@ class ProjektySvodka(BaseMiddleware):
                     prodvizenije=[]
                     for i in range (2,12):
                         prodvizenije.append(next_row[2*i+1])
-                    for i in range (2,12):
                         projekt_predstv_etapov.append(next_row[2*i])
                     svjaz.append(prodvizenije)
                     pokazatel_uspecha=next_row[2*2+1]*1+next_row[3*2+1]*2+next_row[4*2+1]*3+next_row[5*2+1]*4+next_row[6*2+1]*5+next_row[7*2+1]*6
