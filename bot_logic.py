@@ -29,6 +29,8 @@ projekt=[]
 #projekt[10]="Соединить балки с колесиками"
 #projekt[11]="Уборка помещения"
 projekt_long=[]
+projekt_predstv_etapov=[]
+etapy_projektov_svodka=[]
 razovoje_delo=[]
 razovoje_delo_long=[]
 kalendarnoje=[]
@@ -249,7 +251,7 @@ from aiogram.filters import CommandStart, Command, or_f
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 # импорты для машины конечных состояний
 from aiogram.fsm.state import State, StatesGroup
-from fsm_strategy import Sostavlenije_Zamekti, Poisk_ZametKi, Sbornik_ZametKi, Projekt_V_Arhiv
+from fsm_strategy import Sostavlenije_Zamekti, Poisk_ZametKi, Sbornik_ZametKi, Projekt_V_Arhiv, Projekt_Pokaz_Etapy
 from aiogram.types import BotCommand
 import psycopg2 as ps
 from colorama import *
@@ -408,9 +410,13 @@ class ProjektySvodka(BaseMiddleware):
         global id_projekta
         global kolvo_projektov
         global projekti_artikul
+        global projekt_predstv_etapov
+        global etapy_projektov_svodka
         if text == "проект":
             kolvo_projektov = 0
             projekti_artikul = []
+            projekt_predstv_etapov=[]
+            etapy_projektov_svodka = []
             await self.bot.send_message(chat_id=user_id, text="Начинаем работать с проектами")
             # создание интерфейса для sql запроса
             import psycopg2 as ps
@@ -426,15 +432,21 @@ class ProjektySvodka(BaseMiddleware):
                     svjaz=[]
                     svjaz.append(next_row[0])
                     svjaz.append(next_row[1])
+                    projekt_predstv_etapov.append(next_row[0])
+                    projekt_predstv_etapov.append(next_row[1])
+                    projekt_predstv_etapov.append(next_row[2])
                     prodvizenije=[]
                     for i in range (2,12):
                         prodvizenije.append(next_row[2*i+1])
+                    for i in range (2,10):
+                        projekt_predstv_etapov.append(next_row[2*i])
                     svjaz.append(prodvizenije)
                     pokazatel_uspecha=next_row[2*2+1]*1+next_row[3*2+1]*2+next_row[4*2+1]*3+next_row[5*2+1]*4+next_row[6*2+1]*5+next_row[7*2+1]*6
                     pokazatel_uspecha=pokazatel_uspecha+next_row[8*2+1]*7+next_row[9*2+1]*8+next_row[10*2+1]*9+next_row[11*2+1]*10+next_row[3]*100
                     svjaz.append(pokazatel_uspecha)
                     svjaz.append(next_row[3])
                     projekti_artikul.append(svjaz)
+                    etapy_projektov_svodka.append(projekt_predstv_etapov)
                     id = next_row[0]
                     kolvo_projektov = kolvo_projektov + 1
                     if id > nov_id_projekta:
@@ -484,7 +496,8 @@ async def organizer_glav(message: types.Message):
 klava_projekt=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="ввод проекта"),KeyboardButton(text="проверка проекта")],
     [KeyboardButton(text="регистрация проекта"),KeyboardButton(text="закрыть этап проекта")],
-    [KeyboardButton(text="готовый проект в архив"),KeyboardButton(text="выход")]],
+    [KeyboardButton(text="готовый проект в архив"),KeyboardButton(text="посмотреть этапы проекта")],
+     [KeyboardButton(text="выход")]],
     resize_keyboard=True,input_field_placeholder="Выберите, с каким аспектом проекта хотите поработать")
 klava_alfavit_projektov=ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text="А"),KeyboardButton(text="Б"),KeyboardButton(text="В"),KeyboardButton(text="Г"),KeyboardButton(text="Д"),KeyboardButton(text="Е")],
@@ -532,78 +545,81 @@ class VypEtap_Projekta(StatesGroup):
     bukva_projekta=State()
     artikul_projekta = State()
     nomer_etapa = State()
+@dp.message((F.text.lower()=="посмотреть этапы проекта"))
+async def etapy_projekta_1(message: types.Message, state: FSMContext):
+    await message.answer(text="Укажи первую букву, на которую начинается название проекта")
+    await state.set_state(Projekt_Pokaz_Etapy.bukva_pokaz_projekta)
+@dp.message(Projekt_Pokaz_Etapy.bukva_pokaz_projekta, F.text)
+async def etapy_projekta_2(message: types.Message,state: FSMContext):
+    text = message.text
+    bukva_zapros = text.lower()
+    for i in range(len(projekti_artikul)):
+        katalog_projekta = projekti_artikul[i]
+        nazv_projekta = katalog_projekta[1]
+        bukva_projekta = nazv_projekta[0]
+        peremycka=(" : ")
+        if bukva_zapros == bukva_projekta.lower():
+            await message.answer(text=f"{katalog_projekta[0]}{peremycka}{katalog_projekta[1]}")
 @dp.message((F.text.lower()=="/vvod_projekta"))
 @dp.message((F.text.lower()=="ввод проекта"))
 async def sostavjenie_projekta(message: types.Message, state: FSMContext):
     await message.answer(text="Напиши название проекта")
     await state.set_state(Sostavlenije_Projekta.nazvanije)
-    print("Напиши название проекта")
 @dp.message(Sostavlenije_Projekta.nazvanije, F.text)
 async def kriteriy_zaver(message: types.Message,state: FSMContext):
     await state.update_data(nazvanije_projekta=message.text)
     await message.answer(text="Укажи критерий завершенности")
     await state.set_state(Sostavlenije_Projekta.kriterij_zaver)
-    print("Укажи критерий завершённости")
 @dp.message(Sostavlenije_Projekta.kriterij_zaver, F.text)
 async def etap_1(message: types.Message, state: FSMContext):
     await state.update_data(kriteriy_zavershennosti=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_1)
     await message.answer(text="Укажи первый этап проекта")
-    print("Укажи первый этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_1, F.text)
 async def etap_2(message: types.Message, state: FSMContext):
     await state.update_data(etap_1=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_2)
     await message.answer(text="Укажи второй этап проекта")
-    print("Укажи второй этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_2, F.text)
 async def etap_3(message: types.Message, state: FSMContext):
     await state.update_data(etap_2=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_3)
     await message.answer(text="Укажи третий этап проекта")
-    print("Укажи третий этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_3, F.text)
 async def etap_4(message: types.Message, state: FSMContext):
     await state.update_data(etap_3=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_4)
     await message.answer(text="Укажи четвертый этап проекта")
-    print("Укажи четвертый этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_4, F.text)
 async def etap_5(message: types.Message, state: FSMContext):
     await state.update_data(etap_4=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_5)
     await message.answer(text="Укажи пятый этап проекта")
-    print("Укажи четвертый этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_5, F.text)
 async def etap_6(message: types.Message, state: FSMContext):
     await state.update_data(etap_5=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_6)
     await message.answer(text="Укажи шестой этап проекта")
-    print("Укажи шестой этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_6, F.text)
 async def etap_7(message: types.Message, state: FSMContext):
     await state.update_data(etap_6=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_7)
     await message.answer(text="Укажи седьмой этап проекта")
-    print("Укажи седьмой этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_7, F.text)
 async def etap_8(message: types.Message, state: FSMContext):
     await state.update_data(etap_7=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_8)
     await message.answer(text="Укажи восьмой этап проекта")
-    print("Укажи восьмой этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_8, F.text)
 async def etap_9(message: types.Message, state: FSMContext):
     await state.update_data(etap_8=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_9)
     await message.answer(text="Укажи девятый этап проекта")
-    print("Укажи девятый этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_9, F.text)
 async def etap_10(message: types.Message, state: FSMContext):
     await state.update_data(etap_9=message.text)
     await state.set_state(Sostavlenije_Projekta.etap_10)
     await message.answer(text="Укажи последний этап проекта")
-    print("Укажи последний этап проекта")
 @dp.message(Sostavlenije_Projekta.etap_10, F.text)
 async def final(message: types.Message, state: FSMContext):
     await state.update_data(etap_10=message.text)
@@ -671,7 +687,6 @@ async def registracija_projekta(message: types.Message):
     global projekt_long
     global id_projekta
     global validacija_projekta
-    global naidennost
     if zapis == 0:
         await message.answer(text="Данные в буфере по проекту отстутствуют, заполните буфер")
     if validacija_projekta == 0:
@@ -724,6 +739,7 @@ async def zakr_etap_projekta(message: types.Message,state: FSMContext):
 async def bukva_projekta(message: types.Message,state: FSMContext):
     await state.update_data(bukva=message.text)
     global projekti_artikul
+    global naydennost
     text=message.text
     bukva_zapros=text.lower()
     for i in range(len(projekti_artikul)):
