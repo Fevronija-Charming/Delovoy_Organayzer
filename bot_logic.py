@@ -1122,9 +1122,9 @@ async def projekt_arhiv_3(message: types.Message,state: FSMContext):
     if proverka_5 == 1 and proverka_4 == 1 and proverka_3 == 1:
         projekt_v_arhiv[0]=id_proverka_arhiv
         projekt_eksempljar = Проект_Архив(id=projekt_v_arhiv[0], Название_Проекта=projekt_v_arhiv[1], Критерий_Завершенности=projekt_v_arhiv[2],
-        Этап_1=projekt_v_arhiv[3], Этап_2=projekt_v_arhiv[4], Этап_3=projekt_v_arhiv[5], Этап_4=projekt_v_arhiv[5], Этап_5=projekt_v_arhiv[6],
-        Этап_6=projekt_v_arhiv[7], Этап_7=projekt_v_arhiv[8], Этап_8=projekt_v_arhiv[9], Этап_9=projekt_v_arhiv[10], Этап_10=projekt_v_arhiv[11],
-                                  Дата_внесения=projekt_v_arhiv[12], Синхронизация=projekt_v_arhiv[13])
+        Этап_1=projekt_v_arhiv[3], Этап_2=projekt_v_arhiv[4], Этап_3=projekt_v_arhiv[5], Этап_4=projekt_v_arhiv[6], Этап_5=projekt_v_arhiv[7],
+        Этап_6=projekt_v_arhiv[8], Этап_7=projekt_v_arhiv[9], Этап_8=projekt_v_arhiv[10], Этап_9=projekt_v_arhiv[11], Этап_10=projekt_v_arhiv[12],
+        Дата_внесения=projekt_v_arhiv[13], Синхронизация=projekt_v_arhiv[14])
         session = session_factory()
         session.add(projekt_eksempljar)
         await session.commit()
