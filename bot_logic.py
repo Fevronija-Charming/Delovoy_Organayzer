@@ -575,7 +575,8 @@ async def etapy_projekta_3(message: types.Message,state: FSMContext):
     except ValueError:
         await message.answer(text="Введи артикул, который хотите завершить, корректно!")
         await state.set_state(Projekt_Pokaz_Etapy.artikul_pokaz_projekta)
-    for i in range(kolvo_projektov+1):
+    for i in range(kolvo_projektov):
+        print(etapy_projektov_svodka)
         projekt_svedenije=etapy_projektov_svodka[i]
         print(projekt_svedenije)
         nomer_projekta_baza=projekt_svedenije[0]
